@@ -27,73 +27,55 @@ function init() {
 
   scene = new Scene();
 
-  const piece = new BoxGeometry(1, 1, 1).toNonIndexed();
-  const material = new MeshBasicMaterial({
-    vertexColors: true
-  });
-  const positionAttribute = piece.getAttribute('position');
-  const colors = [];
-  const myColors = [
-    0xff0000,
-    0x00ff00,
-    0x0000ff,
-    0x00ffff,
-    0xff00ff,
-    0xffff00,
-  ];
-
-  const color = new Color();
-
-  for (let i = 0; i < positionAttribute.count; i += 6) {
-
-    color.setHex(myColors.shift()!);
-
-    colors.push(color.r, color.g, color.b);
-    colors.push(color.r, color.g, color.b);
-    colors.push(color.r, color.g, color.b);
-
-    colors.push(color.r, color.g, color.b);
-    colors.push(color.r, color.g, color.b);
-    colors.push(color.r, color.g, color.b);
-  } // for
-
-  // define the new attribute
-  piece.setAttribute('color', new Float32BufferAttribute(colors, 3));
-
-  const multicolorCube = new Mesh(piece, material);
-
-  multicolorCube.rotation.x = 0.5;
-  multicolorCube.rotation.y = 0.5;
-
-  // scene.add(multicolorCube);
-
-
-
-
-
-
-
-
-  const origin = new Mesh(
-    new BoxGeometry(1, 1, 1),
-    new MeshBasicMaterial({ color: 0xcccccc })
-  );
-  scene.add(
-    origin
-  );
 
   const positions = [-1, 0, 1];
+  const stickerSize = 0.85;
+  const stickerThickness = 0.01;
+
+
+
+  function createCubie(position: {x: number, y: number, z: number}) {
+    const positionArray = [position.x, position.y, position.z]
+    const cubie = new Mesh(
+      new BoxGeometry(1, 1, 1),
+      new MeshBasicMaterial({ color: 'black' })
+    );
+    cubie.position.set(position.x, position.y, position.z);
+    scene.add(cubie);
+
+    for (let [index, dim] of (['x','y','z'] as const).entries()) {
+      if (Math.abs(position[dim]) === 1) {
+        console.log('creating sticker')
+        let sizes = [stickerSize, stickerSize, stickerSize];
+        sizes[index] = stickerThickness
+        const sticker = new Mesh(
+          new BoxGeometry(...sizes),
+          new MeshBasicMaterial({ color: randomColor() })
+        );
+        const stickerPosition = [...positionArray] as [number, number, number]
+        stickerPosition[index] = positionArray[index] * 1.5;
+        sticker.position.set(...stickerPosition)
+        scene.add(sticker)
+      }
+    }
+
+    // if (position.x === 1) {
+    //   const sticker = new Mesh(
+    //     new BoxGeometry(stickerThickness, stickerSize, stickerSize),
+    //     new MeshBasicMaterial({ color: randomColor() })
+    //   );
+    //   sticker.position.set(position.x + 0.5, position.y, position.z)
+    //   scene.add(sticker)
+    // } else {
+    //   const sticker = 2;
+    // }
+  }
+
+
   for (let x of positions) {
     for (let y of positions) {
       for (let z of positions) {
-        const cube = new Mesh(
-          new BoxGeometry(1, 1, 1),
-          new MeshBasicMaterial({ color: randomColor() })
-        );
-        cube.position.x = x;
-        cube.position.y = y;
-        cube.position.z = z;
-        scene.add(cube);
+        createCubie({x, y, z})
       }
     }
   }
@@ -101,12 +83,9 @@ function init() {
 
   camera.position.z = 5;
   camera.position.y = 5;
-  camera.position.x = 0;
+  camera.position.x = 5
 
   camera.lookAt(0, 0, 0)
-
-
-
 
 
 
@@ -115,6 +94,7 @@ function init() {
   renderer = new WebGLRenderer({
     antialias: true
   });
+  renderer.setClearColor('gray')
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.render(scene, camera);
   document.body.appendChild(renderer.domElement);
