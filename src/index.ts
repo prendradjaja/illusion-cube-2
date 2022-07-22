@@ -4,7 +4,8 @@ import {
   Group,
   Mesh,
   MeshBasicMaterial,
-  OrthographicCamera, PerspectiveCamera,
+  OrthographicCamera,
+  PerspectiveCamera,
   Scene,
   Vector3,
   WebGLRenderer
