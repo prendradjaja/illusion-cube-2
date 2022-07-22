@@ -65,11 +65,25 @@ function turn(
 ) {
   const axisVector = new Vector3(0, 0, 0);
   axisVector.setComponent(axis, 1);
-  const cubies = allCubies.filter(cubie => cubie.position.getComponent(axis) === slice /* TODO use float equality */);
+
+  // Find the cubies that should be involved in the turn
+  const cubies = allCubies.filter(
+    cubie =>
+      floatEquals(
+        cubie.position.getComponent(axis),
+        slice
+      )
+  );
+
+  // Turn them
   for (let cubie of cubies) {
     cubie.position.applyAxisAngle(axisVector, angle);
     cubie.rotateOnWorldAxis(axisVector, angle);
   }
+}
+
+function floatEquals(a: number, b: number, epsilon = 0.00001) {
+  return Math.abs(a - b) < epsilon;
 }
 
 function createCubie(position: {x: number, y: number, z: number}): Group {
