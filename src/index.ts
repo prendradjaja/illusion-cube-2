@@ -51,17 +51,25 @@ function main() {
   }
 
   // Turn a side
-  cubies
-    .filter(cubie => cubie.position.x === 1 /* TODO use float equality */)
-    .forEach(cubie => {
-      let angle = Math.PI * 0.1;
-      const axis = new Vector3(1, 0, 0);
-      cubie.position.applyAxisAngle(axis, angle);
-      cubie.rotateOnWorldAxis(axis, angle);
-    });
+  turn(cubies, 0, 1, Math.PI / 8)
 
   // Render
   renderer.render(scene, camera);
+}
+
+function turn(
+  allCubies: Group[],
+  axis: 0 | 1 | 2,
+  slice: -1 | 0 | 1,
+  angle: number
+) {
+  const axisVector = new Vector3(0, 0, 0);
+  axisVector.setComponent(axis, 1);
+  const cubies = allCubies.filter(cubie => cubie.position.getComponent(axis) === slice /* TODO use float equality */);
+  for (let cubie of cubies) {
+    cubie.position.applyAxisAngle(axisVector, angle);
+    cubie.rotateOnWorldAxis(axisVector, angle);
+  }
 }
 
 function createCubie(position: {x: number, y: number, z: number}): Group {
