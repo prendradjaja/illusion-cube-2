@@ -4,19 +4,21 @@ export interface MoveDefinition {
   direction: -1 | 1;
 }
 
-function md(movedef: MoveDefinition): MoveDefinition {
-  return movedef;
-}
-
-export const moveDefinitions = {
-  R: md({
+// Each entry must be a MoveDefinition
+const _moveDefinitions = {
+  R: {
     axis: 0,
     slice: 1,
     direction: -1,
-  }),
-  U: md({
+  },
+  U: {
     axis: 1,
     slice: 1,
     direction: -1,
-  }),
+  },
 } as const;
+
+export const moveDefinitions: Record<
+  keyof typeof _moveDefinitions,
+  MoveDefinition
+> = _moveDefinitions;
