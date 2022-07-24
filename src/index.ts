@@ -132,13 +132,14 @@ function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
     turn(allCubies, axis, slice, angle)
   }
 
-  lastTween = new Tween({ progress: 0 })
+  const tween = new Tween({ progress: 0 })
     .to({ progress: 1 }, 250)
     .easing(Easing.Quadratic.Out)
     .onUpdate(({ progress }) => onProgress({ progress }))
     .onComplete(() => onProgress({ progress: 1 })) // Do I need onComplete? Surely it's covered by onUpdate
     .onStop(() => onProgress({ progress: 1 }))
-    .start();
+  tween.start();
+  lastTween = tween;
 };
 
 function floatEquals(a: number, b: number, epsilon = 0.00001) {
