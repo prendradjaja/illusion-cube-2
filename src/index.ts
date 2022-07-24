@@ -13,7 +13,16 @@ import {
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 import {getMoveDefinition, MoveDefinition, moveDefinitions} from "./move-definitions";
 
-const standardStickerColors = {
+const cube1Colors = {
+  'x=1': 'green',
+  'x=-1': 'blue',
+  'y=1': 'white',
+  'y=-1': 'yellow',
+  'z=1': 'orange',
+  'z=-1': 'red',
+} as Partial<Record<string, string>>;
+
+const cube2Colors = {
   'x=1': 'red',
   'x=-1': 'orange',
   'y=1': 'white',
@@ -26,12 +35,15 @@ const stickerSize = 0.85;
 const stickerThickness = 0.01;
 
 function main() {
-  const cube = new RubiksCube(standardStickerColors);
+  const cube1 = new RubiksCube(cube1Colors, 'bottom');
+  const cube2 = new RubiksCube(cube2Colors, 'top');
 
-  document.getElementById('cube-container')!.appendChild(cube.getDomElement());
+  document.getElementById('cube1-container')!.appendChild(cube1.getDomElement());
+  document.getElementById('cube2-container')!.appendChild(cube2.getDomElement());
 
   // Render first frame
-  cube.render();
+  cube1.render();
+  cube2.render();
 
   // Animation loop
   requestAnimationFrame(function animate(time) {
@@ -44,14 +56,13 @@ function main() {
     // Probably not a big deal though -- normal fully-animated scenes need to
     // render on every frame anyway.
 
-    // cube.render();
+    // cube1.render();
+    // cube2.render();
   });
 
-  // Key handler
-  document.addEventListener('keydown', (evt: KeyboardEvent) => onKeyDown(evt, cube));
-
   // Button handler
-  (window as any).startTurn = (moveName: string) => cube.startTurn(moveName);
+  (window as any).startTurn = (cubeId: 1 | 2, moveName: string) =>
+    (cubeId === 1 ? cube1 : cube2).startTurn(moveName);
 }
 
 class RubiksCube {
@@ -63,19 +74,23 @@ class RubiksCube {
 
   private lastTween: Tween<{ progress: number }> | undefined;
 
-  constructor(private stickerColors: Partial<Record<string, string>>) {
+  constructor(
+    private stickerColors: Partial<Record<string, string>>,
+    cameraAngle: 'top' | 'bottom'
+  ) {
     this.scene = new Scene();
 
     // Set up camera
     this.camera = new OrthographicCamera(...calculateViewingFrustum());
     /* this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10); */
-    this.camera.position.set(4, 4, 4);
+    const y = cameraAngle === 'top' ? 4 : -4;
+    this.camera.position.set(4, y, 4);
     this.camera.lookAt(0, 0, 0)
 
     // Set up renderer
     this.renderer = new WebGLRenderer({ antialias: true });
     this.renderer.setClearColor('gray')
-    this.renderer.setSize(1000, 1000);
+    this.renderer.setSize(800, 800);
 
     // Draw cube
     for (let x of [-1, 0, 1]) {
@@ -212,8 +227,8 @@ function floatEquals(a: number, b: number, epsilon = 0.00001) {
 
 function calculateViewingFrustum(): [number, number, number, number, number, number] {
   const aspectRatio = 1;
-  const width = 10 * aspectRatio;
-  const height = 10;
+  const width = 7 * aspectRatio;
+  const height = 7;
   return [
     width / -2,
     width / 2,

@@ -15,19 +15,29 @@
         font-size: 80px;
         font-family: monospace;
       }
-      #cube-container {
-        width: fit-content;
-        margin: 0 auto;
+      #cubes-centering-container {
+        display: flex;
+        justify-content: center;
       }
     </style>
   </head>
   <body>
-    <div id="cube-container"></div>
+    <div id="cubes-centering-container">
+      <div id="cube1-container"></div>
+      <div id="cube2-container"></div>
+    </div>
     <div id="controls">
-      <button onmousedown="startTurn('R')">R</button>
-      <button onmousedown="startTurn('Ri')">i</button>
-      <button onmousedown="startTurn('U')">U</button>
-      <button onmousedown="startTurn('Ui')">i</button>
+      <button onmousedown="startTurn(1, 'R')">R</button>
+      <button onmousedown="startTurn(1, 'Ri')">i</button>
+      <button onmousedown="startTurn(1, 'U')">U</button>
+      <button onmousedown="startTurn(1, 'Ui')">i</button>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+      <button onmousedown="startTurn(2, 'R')">R</button>
+      <button onmousedown="startTurn(2, 'Ri')">i</button>
+      <button onmousedown="startTurn(2, 'U')">U</button>
+      <button onmousedown="startTurn(2, 'Ui')">i</button>
     </div>
   </body>
 </html>
