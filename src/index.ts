@@ -12,6 +12,7 @@ import {
 } from "three";
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 import {getMoveDefinition, MoveDefinition, moveDefinitions} from "./move-definitions";
+import {DEBUG_callPrivate, DEBUG_getPrivate} from "./debug-tools";
 
 const cube1Colors = {
   'x=1': 'green',
@@ -59,10 +60,21 @@ function main() {
   // cubes[2].setStickerColor(sourceSticker, 'hotpink')
   // cubes[1].setStickerColor(destSticker, 'cyan')
 
-  // cubes[1].setStickerColor('R', 'cyan')
-  cubes[1].setStickerColor('RU', 'magenta')
-  cubes[1].setStickerColor('RUF', 'yellow')
+  DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
 
+  cubes[1].setStickerColor('RD', 'hotpink')
+  cubes[1].setStickerColor('RDF', 'purple')
+
+  // cubes[1].setStickerColor('RU', 'hotpink')
+  // cubes[1].setStickerColor('RUF', 'purple')
+
+  // cubes[1].setStickerColor('R', 'cyan')
+
+  DEBUG_getPrivate<Group[]>(cubes[1], 'allCubies')[0].children.forEach(child => {
+    const position = new Vector3()
+    child.getWorldPosition(position)
+    console.log(position)
+  })
 
   // Render first frame
   cubes[1].render();
@@ -255,6 +267,7 @@ class RubiksCube {
   }
 
   private getStickerMaterial(stickerName: StickerName): MeshBasicMaterial {
+    // TODO need to use world position
     const { face, other1, other2 } = parseStickerName(stickerName)
     const cubie = this.allCubies.find(
       each =>
