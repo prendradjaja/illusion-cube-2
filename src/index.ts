@@ -10,6 +10,8 @@ import {
   Vector3,
   WebGLRenderer
 } from "three";
+import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
+import { MoveDefinition, moveDefinitions } from "./move-definitions";
 
 const stickerColors = {
   'x=1': 'red',
@@ -26,6 +28,8 @@ const stickerThickness = 0.01;
 let camera: Camera;
 let scene: Scene;
 let renderer: WebGLRenderer;
+
+let lastTween: Tween<{ progress: number }>;
 
 main();
 
@@ -57,10 +61,19 @@ function main() {
   }
 
   // Turn a side
-  turn(cubies, 0, 1, Math.PI / 8)
+  // turn(cubies, 0, 1, Math.PI / 8)
 
   // Render
   renderer.render(scene, camera);
+
+  // Animation loop
+  requestAnimationFrame(function animate(time) {
+    requestAnimationFrame(animate);
+    updateAllTweens(time);
+    renderer.render(scene, camera);
+  });
+
+  document.addEventListener('keydown', (evt: KeyboardEvent) => onKeyDown(evt, cubies));
 }
 
 function turn(
@@ -85,6 +98,53 @@ function turn(
   for (let cubie of cubies) {
     cubie.position.applyAxisAngle(axisVector, angle);
     cubie.rotateOnWorldAxis(axisVector, angle);
+  }
+}
+
+function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
+  let move: MoveDefinition;
+
+  if (evt.key === 'j' || evt.key === 'ArrowDown') {
+    move = reverse(moveDefinitions.R);
+  } else if (evt.key === 'k' || evt.key === 'ArrowUp') {
+    move = moveDefinitions.R;
+  } else if (evt.key === 'h' || evt.key === 'ArrowLeft') {
+    move = reverse(moveDefinitions.U);
+  } else if (evt.key === 'l' || evt.key === 'ArrowRight') {
+    move = moveDefinitions.U;
+  } else {
+    return;
+  }
+
+  if (lastTween) {
+    // If the most recent tween is still in progress, we want to skip to the
+    // end.
+    lastTween.stop();
+  }
+
+  let lastProgress = 0;
+
+  const onProgress = ({ progress }: { progress: number }) => {
+    const { axis, slice, direction } = move;
+    const progressDelta = progress - lastProgress;
+    lastProgress = progress;
+    const angle = direction * progressDelta * Math.PI / 2;
+    turn(allCubies, axis, slice, angle)
+  }
+
+  lastTween = new Tween({ progress: 0 })
+    .to({ progress: 1 }, 250)
+    .easing(Easing.Quadratic.Out)
+    .onUpdate(({ progress }) => onProgress({ progress }))
+    .onComplete(() => onProgress({ progress: 1 })) // Do I need onComplete? Surely it's covered by onUpdate
+    .onStop(() => onProgress({ progress: 1 }))
+    .start();
+};
+
+function reverse(move: MoveDefinition): MoveDefinition {
+  return {
+    ...move,
+    direction: -move.direction as -1 | 1
   }
 }
 
