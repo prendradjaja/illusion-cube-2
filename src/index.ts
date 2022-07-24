@@ -43,9 +43,9 @@ function main() {
   camera.lookAt(0, 0, 0)
 
   // Set up renderer
-  renderer = new WebGLRenderer({ antialias: true });
-  renderer.setClearColor('gray')
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer = new WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setClearColor('magenta', 0)
+  renderer.setSize(1000, 1000);
   document.body.appendChild(renderer.domElement);
 
   // Draw cube
@@ -74,6 +74,33 @@ function main() {
   });
 
   document.addEventListener('keydown', (evt: KeyboardEvent) => onKeyDown(evt, cubies));
+
+  // Draw static cube
+  (() => {
+    const scene2 = new Scene();
+    const camera2 = new OrthographicCamera(...calculateViewingFrustum())
+    camera2.position.set(-4, -4, 4)
+    camera2.lookAt(0, 0, 0);
+
+    const renderer2 = new WebGLRenderer({ antialias: true, alpha: true });
+    renderer2.setClearColor('magenta', 0)
+    renderer2.setSize(1000, 1000);
+    document.body.appendChild(renderer2.domElement);
+
+    // Draw cube
+    const cubies: Group[] = [];
+    for (let x of [-1, 0, 1]) {
+      for (let y of [-1, 0, 1]) {
+        for (let z of [-1, 0, 1]) {
+          const cubie = createCubie({x, y, z});
+          cubies.push(cubie);
+          scene2.add(cubie);
+        }
+      }
+    }
+
+    renderer2.render(scene2, camera2)
+  })();
 }
 
 function turn(
@@ -185,7 +212,7 @@ function createCubie(position: {x: number, y: number, z: number}): Group {
 }
 
 function calculateViewingFrustum(): [number, number, number, number, number, number] {
-  const aspectRatio = window.innerWidth / window.innerHeight;
+  const aspectRatio = 1;
   const viewingWindow = { // Not sure what the right terminology is here
     width: 10 * aspectRatio,
     height: 10

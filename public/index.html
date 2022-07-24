@@ -4,7 +4,22 @@
     <meta charset="utf-8">
     <title>TypeScript on Browser</title>
     <style>
-      body { margin: 0; }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas:nth-child(1) {
+        position: absolute;
+        top: -123px;
+        left: 212px;
+        z-index: 1;
+      }
+
+      canvas:nth-child(2) {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
     </style>
   </head>
   <body>
