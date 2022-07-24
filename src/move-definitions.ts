@@ -33,3 +33,7 @@ export const moveDefinitions = {
   Ri: inverse(basicMoveDefinitions.R),
   Ui: inverse(basicMoveDefinitions.U),
 }
+
+export function getMoveDefinition(moveName: string): MoveDefinition | undefined {
+  return (moveDefinitions as Partial<Record<string, MoveDefinition>>)[moveName];
+}

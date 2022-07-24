@@ -4,9 +4,30 @@
     <meta charset="utf-8">
     <title>TypeScript on Browser</title>
     <style>
-      body { margin: 0; }
+      body {
+        margin: 0;
+      }
+      #controls {
+        width: fit-content;
+        margin: 0 auto;
+      }
+      #controls button {
+        font-size: 80px;
+        font-family: monospace;
+      }
+      #cube-container {
+        width: fit-content;
+        margin: 0 auto;
+      }
     </style>
   </head>
   <body>
+    <div id="cube-container"></div>
+    <div id="controls">
+      <button onmousedown="startTurn('R')">R</button>
+      <button onmousedown="startTurn('Ri')">i</button>
+      <button onmousedown="startTurn('U')">U</button>
+      <button onmousedown="startTurn('Ui')">i</button>
+    </div>
   </body>
 </html>

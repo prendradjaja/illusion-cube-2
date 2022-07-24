@@ -11,7 +11,7 @@ import {
   WebGLRenderer
 } from "three";
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
-import { MoveDefinition, moveDefinitions } from "./move-definitions";
+import {getMoveDefinition, MoveDefinition, moveDefinitions} from "./move-definitions";
 
 const stickerColors = {
   'x=1': 'red',
@@ -24,6 +24,7 @@ const stickerColors = {
 
 const stickerSize = 0.85;
 const stickerThickness = 0.01;
+const allCubies: Group[] = [];
 
 let camera: Camera;
 let scene: Scene;
@@ -45,16 +46,15 @@ function main() {
   // Set up renderer
   renderer = new WebGLRenderer({ antialias: true });
   renderer.setClearColor('gray')
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  renderer.setSize(1000, 1000);
+  document.getElementById('cube-container')!.appendChild(renderer.domElement);
 
   // Draw cube
-  const cubies: Group[] = [];
   for (let x of [-1, 0, 1]) {
     for (let y of [-1, 0, 1]) {
       for (let z of [-1, 0, 1]) {
         const cubie = createCubie({x, y, z});
-        cubies.push(cubie);
+        allCubies.push(cubie);
         scene.add(cubie);
       }
     }
@@ -77,12 +77,14 @@ function main() {
     // renderer.render(scene, camera);
   });
 
-  // Handle keypresses
-  document.addEventListener('keydown', (evt: KeyboardEvent) => onKeyDown(evt, cubies));
+  // Key handler
+  document.addEventListener('keydown', (evt: KeyboardEvent) => onKeyDown(evt));
+
+  // Button handler
+  (window as any).startTurn = startTurn;
 }
 
 function turn(
-  allCubies: Group[],
   axis: 0 | 1 | 2,
   slice: -1 | 0 | 1,
   angle: number
@@ -106,19 +108,29 @@ function turn(
   }
 }
 
-function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
-  let move: MoveDefinition;
+function onKeyDown(evt: KeyboardEvent): void {
+  let moveName: keyof typeof moveDefinitions;
 
   if (evt.key === 'j' || evt.key === 'ArrowDown') {
-    move = moveDefinitions.Ri;
+    moveName = 'Ri';
   } else if (evt.key === 'k' || evt.key === 'ArrowUp') {
-    move = moveDefinitions.R;
+    moveName = 'R';
   } else if (evt.key === 'h' || evt.key === 'ArrowLeft') {
-    move = moveDefinitions.Ui;
+    moveName = 'Ui';
   } else if (evt.key === 'l' || evt.key === 'ArrowRight') {
-    move = moveDefinitions.U;
+    moveName = 'U';
   } else {
     return;
+  }
+
+  startTurn(moveName);
+}
+
+function startTurn(moveName: string): void {
+  const move = getMoveDefinition(moveName)
+
+  if (!move) {
+    return
   }
 
   if (lastTween) {
@@ -134,7 +146,7 @@ function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
     const progressDelta = progress - lastProgress;
     lastProgress = progress;
     const angle = direction * progressDelta * Math.PI / 2;
-    turn(allCubies, axis, slice, angle)
+    turn(axis, slice, angle)
     renderer.render(scene, camera);
   }
 
@@ -185,7 +197,7 @@ function createCubie(position: {x: number, y: number, z: number}): Group {
 }
 
 function calculateViewingFrustum(): [number, number, number, number, number, number] {
-  const aspectRatio = window.innerWidth / window.innerHeight;
+  const aspectRatio = 1;
   const width = 10 * aspectRatio;
   const height = 10;
   return [
