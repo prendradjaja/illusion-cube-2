@@ -60,19 +60,24 @@ function main() {
     }
   }
 
-  // Turn a side
-  // turn(cubies, 0, 1, Math.PI / 8)
-
-  // Render
+  // Render first frame
   renderer.render(scene, camera);
 
   // Animation loop
   requestAnimationFrame(function animate(time) {
     requestAnimationFrame(animate);
     updateAllTweens(time);
-    renderer.render(scene, camera);
+
+    // In principle, we could render on every frame like this. But that seems
+    // wasteful, so I'm avoiding that! Instead, by calling render() inside
+    // onProgress(), I only render while tweening (i.e. while making a turn).
+    // Probably not a big deal though -- normal fully-animated scenes need to
+    // render on every frame anyway.
+
+    // renderer.render(scene, camera);
   });
 
+  // Handle keypresses
   document.addEventListener('keydown', (evt: KeyboardEvent) => onKeyDown(evt, cubies));
 }
 
@@ -130,6 +135,7 @@ function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
     lastProgress = progress;
     const angle = direction * progressDelta * Math.PI / 2;
     turn(allCubies, axis, slice, angle)
+    renderer.render(scene, camera);
   }
 
   const tween = new Tween({ progress: 0 })
