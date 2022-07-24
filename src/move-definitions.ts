@@ -8,7 +8,14 @@ function md(movedef: MoveDefinition): MoveDefinition {
   return movedef;
 }
 
-export const moveDefinitions = {
+function inverse(move: MoveDefinition): MoveDefinition {
+  return {
+    ...move,
+    direction: -move.direction as -1 | 1
+  }
+}
+
+const basicMoveDefinitions = {
   R: md({
     axis: 0,
     slice: 1,
@@ -19,4 +26,10 @@ export const moveDefinitions = {
     slice: 1,
     direction: -1,
   }),
-} as const;
+};
+
+export const moveDefinitions = {
+  ...basicMoveDefinitions,
+  Ri: inverse(basicMoveDefinitions.R),
+  Ui: inverse(basicMoveDefinitions.U),
+}

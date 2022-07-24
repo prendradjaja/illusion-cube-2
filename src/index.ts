@@ -105,11 +105,11 @@ function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
   let move: MoveDefinition;
 
   if (evt.key === 'j' || evt.key === 'ArrowDown') {
-    move = reverse(moveDefinitions.R);
+    move = moveDefinitions.Ri;
   } else if (evt.key === 'k' || evt.key === 'ArrowUp') {
     move = moveDefinitions.R;
   } else if (evt.key === 'h' || evt.key === 'ArrowLeft') {
-    move = reverse(moveDefinitions.U);
+    move = moveDefinitions.Ui;
   } else if (evt.key === 'l' || evt.key === 'ArrowRight') {
     move = moveDefinitions.U;
   } else {
@@ -140,13 +140,6 @@ function onKeyDown(evt: KeyboardEvent, allCubies: Group[]): void {
     .onStop(() => onProgress({ progress: 1 }))
     .start();
 };
-
-function reverse(move: MoveDefinition): MoveDefinition {
-  return {
-    ...move,
-    direction: -move.direction as -1 | 1
-  }
-}
 
 function floatEquals(a: number, b: number, epsilon = 0.00001) {
   return Math.abs(a - b) < epsilon;
