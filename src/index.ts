@@ -186,15 +186,13 @@ function createCubie(position: {x: number, y: number, z: number}): Group {
 
 function calculateViewingFrustum(): [number, number, number, number, number, number] {
   const aspectRatio = window.innerWidth / window.innerHeight;
-  const viewingWindow = { // Not sure what the right terminology is here
-    width: 10 * aspectRatio,
-    height: 10
-  };
+  const width = 10 * aspectRatio;
+  const height = 10;
   return [
-    viewingWindow.width / -2,
-    viewingWindow.width / 2,
-    viewingWindow.height / 2,
-    viewingWindow.height / -2,
+    width / -2,
+    width / 2,
+    height / 2,
+    height / -2,
     1,
     100,
   ];
