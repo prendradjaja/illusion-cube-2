@@ -1,7 +1,7 @@
 import {
   BoxGeometry,
-  Camera,
-  Group,
+  Camera, Color, ColorRepresentation,
+  Group, Material,
   Mesh,
   MeshBasicMaterial,
   OrthographicCamera,
@@ -34,16 +34,39 @@ const cube2Colors = {
 const stickerSize = 0.85;
 const stickerThickness = 0.01;
 
-function main() {
-  const cube1 = new RubiksCube(cube1Colors, 'bottom');
-  const cube2 = new RubiksCube(cube2Colors, 'top');
+const cubes = {
+  1: undefined as unknown as RubiksCube, // To be initialized in main
+  2: undefined as unknown as RubiksCube,
+}
 
-  document.getElementById('cube1-container')!.appendChild(cube1.getDomElement());
-  document.getElementById('cube2-container')!.appendChild(cube2.getDomElement());
+function main() {
+  cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
+  cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
+
+  // cubes[1].setStickerColor('RUF', cubes[1].getStickerColor('FUR'));
+
+  document.getElementById('cube1-container')!.appendChild(cubes[1].getDomElement());
+  document.getElementById('cube2-container')!.appendChild(cubes[2].getDomElement());
+
+  // const updates = [
+  //   ['FUL', 'RUF'],
+  //   ['FU', 'RU'],
+  //   ['FUR', 'RUB'],
+  //   ['FL', 'RF'],
+  //   // ['']
+  // ] as const;
+  // const [ sourceSticker, destSticker ] = updates.slice(-1)[0];
+  // cubes[2].setStickerColor(sourceSticker, 'hotpink')
+  // cubes[1].setStickerColor(destSticker, 'cyan')
+
+  // cubes[1].setStickerColor('R', 'cyan')
+  cubes[1].setStickerColor('RU', 'magenta')
+  cubes[1].setStickerColor('RUF', 'yellow')
+
 
   // Render first frame
-  cube1.render();
-  cube2.render();
+  cubes[1].render();
+  cubes[2].render();
 
   // Animation loop
   requestAnimationFrame(function animate(time) {
@@ -60,9 +83,23 @@ function main() {
     // cube2.render();
   });
 
+  document.addEventListener('keydown', e => onKeyDown(e, cubes[2]));
+
   // Button handler
   (window as any).startTurn = (cubeId: 1 | 2, moveName: string) =>
-    (cubeId === 1 ? cube1 : cube2).startTurn(moveName);
+    cubes[cubeId].startTurn(moveName);
+}
+
+function updateOtherCube(sourceCubeId: 1 | 2): void {
+  if (sourceCubeId === 2) {
+    const destCubeId = 1;
+    const sourceCube = cubes[sourceCubeId];
+    const destCube = cubes[destCubeId];
+    // destCube.setStickerColor('RUF', sourceCube.getStickerColor('FUL'));
+  } else {
+    const destCubeId = 2;
+    // TODO
+  }
 }
 
 class RubiksCube {
@@ -76,7 +113,8 @@ class RubiksCube {
 
   constructor(
     private stickerColors: Partial<Record<string, string>>,
-    cameraAngle: 'top' | 'bottom'
+    cameraAngle: 'top' | 'bottom',
+    private cubeId: 1 | 2
   ) {
     this.scene = new Scene();
 
@@ -196,11 +234,108 @@ class RubiksCube {
       .to({ progress: 1 }, 250)
       .easing(Easing.Quadratic.Out)
       .onUpdate(({ progress }) => onProgress({ progress }))
-      .onComplete(() => onProgress({ progress: 1 })) // Do I need onComplete? Surely it's covered by onUpdate
-      .onStop(() => onProgress({ progress: 1 }))
+      .onComplete(() => {
+        onProgress({ progress: 1 });
+        updateOtherCube(this.cubeId);
+      }) // Do I need onComplete? Surely it's covered by onUpdate
+      .onStop(() => {
+        onProgress({ progress: 1 });
+        updateOtherCube(this.cubeId);
+      })
     tween.start();
     this.lastTween = tween;
   };
+
+  public getStickerColor(stickerName: StickerName): string {
+    return '#' + this.getStickerMaterial(stickerName).color.getHexString();
+  }
+
+  public setStickerColor(stickerName: StickerName, color: ColorRepresentation): void {
+    this.getStickerMaterial(stickerName).color.set(color);
+  }
+
+  private getStickerMaterial(stickerName: StickerName): MeshBasicMaterial {
+    const { face, other1, other2 } = parseStickerName(stickerName)
+    const cubie = this.allCubies.find(
+      each =>
+        floatEquals(each.position.getComponent(face.axis), face.direction) &&
+        floatEquals(each.position.getComponent(other1.axis), other1.direction) &&
+        floatEquals(each.position.getComponent(other2.axis), other2.direction)
+    )
+    if (!cubie) {
+      throw new Error("Cubie not found");
+    }
+    const sticker = cubie.children.find(
+      each =>
+        floatEquals(each.position.getComponent(face.axis), face.direction * 0.5)
+    )
+    if (!sticker) {
+      throw new Error("Sticker not found");
+    }
+    if (!(sticker instanceof Mesh)) {
+      throw new Error("Sticker is not a Mesh")
+    }
+    const material = sticker.material
+    if (!(material instanceof MeshBasicMaterial)) {
+      throw new Error("Sticker is not a MeshBasicMaterial")
+    }
+    return material;
+  }
+}
+
+type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
+type StickerName =
+  | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
+  | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
+  // | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
+interface StickerPosition {
+  face: { axis: 0 | 1 | 2, direction: -1 | 1 };
+  other1: { axis: 0 | 1 | 2, direction: -1 | 0 | 1 };
+  other2: { axis: 0 | 1 | 2, direction: -1 | 0 | 1 };
+}
+
+const stickerPositionMap = {
+  U: { axis: 1, direction: 1 },
+  D: { axis: 1, direction: -1 },
+  F: { axis: 2, direction: 1 },
+  B: { axis: 2, direction: -1 },
+  R: { axis: 0, direction: 1 },
+  L: { axis: 0, direction: -1 },
+} as const;
+
+function parseStickerName(name: StickerName): StickerPosition {
+  let face = name[0] as FaceName;
+  let other1 = name[1] as FaceName;
+  let other2 = name[2] as FaceName | undefined;
+  const result = {
+    face: stickerPositionMap[face],
+    other1: stickerPositionMap[other1],
+    other2: !!other2
+      ? stickerPositionMap[other2]
+      : { axis: otherAxis(face, other1), direction: 0 } as const,
+  }
+  const axesCount = new Set([
+    result.face.axis,
+    result.other1.axis,
+    result.other2.axis,
+  ]).size;
+  // if (axesCount !== 3) {
+  //   // Could define StickerName as `type StickerName = 'RUF' | 'RFU' | 'LUF' | ...` and prevent this case from happening at compile time
+  //   throw new Error('Invalid sticker name (Must specify three axes e.g. RFU is valid but RFF or RFB is not)')
+  // }
+  return result;
+}
+
+function otherAxis(a: FaceName, b: FaceName): 0 | 1 | 2 {
+  let axisA = stickerPositionMap[a].axis;
+  let axisB = stickerPositionMap[b].axis;
+  if (axisA === axisB) {
+    throw new Error("axisA === axisB");
+  }
+  const axes = new Set<0 | 1 | 2>([0, 1, 2]);
+  axes.delete(axisA);
+  axes.delete(axisB);
+  return Array.from(axes.values())[0]
 }
 
 function onKeyDown(evt: KeyboardEvent, cube: RubiksCube): void {
