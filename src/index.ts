@@ -49,21 +49,6 @@ function main() {
   document.getElementById('cube1-container')!.appendChild(cubes[1].getDomElement());
   document.getElementById('cube2-container')!.appendChild(cubes[2].getDomElement());
 
-  // const updates = [
-  //   ['FUL', 'RUF'],
-  //   ['FU', 'RU'],
-  //   ['FUR', 'RUB'],
-  //   ['FL', 'RF'],
-  //   ['F', 'R'],
-  //   ['FR', 'RB'],
-  //   ['FDL', 'RDF'],
-  //   ['FD', 'RD'],
-  //   ['FDR', 'RDB'],
-  // ] as const;
-  // const [ sourceSticker, destSticker ] = updates.slice(-1)[0];
-  // cubes[2].setStickerColor(sourceSticker, 'hotpink')
-  // cubes[1].setStickerColor(destSticker, 'cyan')
-
   // DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
   //
   // cubes[1].setStickerColor('RD', 'hotpink')
@@ -118,6 +103,8 @@ const update2To1 = [
   ['FDR', 'RDB'],
 ] as const;
 
+const update1To2 = update2To1.map(([a, b]) => [b, a]);
+
 function updateOtherCube(sourceCubeId: 1 | 2): void {
   if (sourceCubeId === 2) {
     const destCubeId = 1;
@@ -129,7 +116,12 @@ function updateOtherCube(sourceCubeId: 1 | 2): void {
     destCube.render();
   } else {
     const destCubeId = 2;
-    // TODO
+    const sourceCube = cubes[sourceCubeId];
+    const destCube = cubes[destCubeId];
+    for (let [sourceSticker, destSticker] of update1To2) {
+      destCube.setStickerColor(destSticker, sourceCube.getStickerColor(sourceSticker));
+    }
+    destCube.render();
   }
 }
 
