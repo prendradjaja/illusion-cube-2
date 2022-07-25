@@ -54,27 +54,31 @@ function main() {
   //   ['FU', 'RU'],
   //   ['FUR', 'RUB'],
   //   ['FL', 'RF'],
-  //   // ['']
+  //   ['F', 'R'],
+  //   ['FR', 'RB'],
+  //   ['FDL', 'RDF'],
+  //   ['FD', 'RD'],
+  //   ['FDR', 'RDB'],
   // ] as const;
   // const [ sourceSticker, destSticker ] = updates.slice(-1)[0];
   // cubes[2].setStickerColor(sourceSticker, 'hotpink')
   // cubes[1].setStickerColor(destSticker, 'cyan')
 
-  DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
-
-  cubes[1].setStickerColor('RD', 'hotpink')
-  cubes[1].setStickerColor('RDF', 'purple')
-
-  cubes[1].setStickerColor('RU', 'hotpink')
-  cubes[1].setStickerColor('RUF', 'purple')
-
-  cubes[1].setStickerColor('R', 'cyan')
-
-  DEBUG_getPrivate<Group[]>(cubes[1], 'allCubies')[0].children.forEach(child => {
-    const position = new Vector3()
-    child.getWorldPosition(position)
-    console.log(position)
-  })
+  // DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
+  //
+  // cubes[1].setStickerColor('RD', 'hotpink')
+  // cubes[1].setStickerColor('RDF', 'purple')
+  //
+  // cubes[1].setStickerColor('RU', 'hotpink')
+  // cubes[1].setStickerColor('RUF', 'purple')
+  //
+  // cubes[1].setStickerColor('R', 'cyan')
+  //
+  // DEBUG_getPrivate<Group[]>(cubes[1], 'allCubies')[0].children.forEach(child => {
+  //   const position = new Vector3()
+  //   child.getWorldPosition(position)
+  //   console.log(position)
+  // })
 
   // Render first frame
   cubes[1].render();
@@ -102,12 +106,27 @@ function main() {
     cubes[cubeId].startTurn(moveName);
 }
 
+const update2To1 = [
+  ['FUL', 'RUF'],
+  ['FU', 'RU'],
+  ['FUR', 'RUB'],
+  ['FL', 'RF'],
+  ['F', 'R'],
+  ['FR', 'RB'],
+  ['FDL', 'RDF'],
+  ['FD', 'RD'],
+  ['FDR', 'RDB'],
+] as const;
+
 function updateOtherCube(sourceCubeId: 1 | 2): void {
   if (sourceCubeId === 2) {
     const destCubeId = 1;
     const sourceCube = cubes[sourceCubeId];
     const destCube = cubes[destCubeId];
-    // destCube.setStickerColor('RUF', sourceCube.getStickerColor('FUL'));
+    for (let [sourceSticker, destSticker] of update2To1) {
+      destCube.setStickerColor(destSticker, sourceCube.getStickerColor(sourceSticker));
+    }
+    destCube.render();
   } else {
     const destCubeId = 2;
     // TODO
