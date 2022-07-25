@@ -269,15 +269,15 @@ class RubiksCube {
     this.lastTween = tween;
   };
 
-  public getStickerColor(stickerName: StickerName): string {
+  public getStickerColor(stickerName: LocationName): string {
     return '#' + this.getStickerMaterial(stickerName).color.getHexString();
   }
 
-  public setStickerColor(stickerName: StickerName, color: ColorRepresentation): void {
+  public setStickerColor(stickerName: LocationName, color: ColorRepresentation): void {
     this.getStickerMaterial(stickerName).color.set(color);
   }
 
-  private getStickerMaterial(stickerName: StickerName): MeshBasicMaterial {
+  private getStickerMaterial(stickerName: LocationName): MeshBasicMaterial {
     const cubiePosition = locationNameToCubiePosition(stickerName);
     const stickerPosition = locationNameToStickerPosition(stickerName);
     const cubie = this.allCubies.find(
@@ -312,7 +312,7 @@ class RubiksCube {
 }
 
 type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
-type StickerName =
+type LocationName =
   | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
   | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
   | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
@@ -337,7 +337,7 @@ const faceNameToVector = {
   B: new Vector3(0, 0, -1),
 } as const;
 
-function locationNameToCubiePosition(location: StickerName): Vector3 {
+function locationNameToCubiePosition(location: LocationName): Vector3 {
   const faces = Array.from(location) as FaceName[];
 
   if (
@@ -356,7 +356,7 @@ function locationNameToCubiePosition(location: StickerName): Vector3 {
   return result;
 }
 
-function locationNameToStickerPosition(location: StickerName): Vector3 {
+function locationNameToStickerPosition(location: LocationName): Vector3 {
   const primaryFace = location[0] as FaceName;
   const result = locationNameToCubiePosition(location);
   result.addScaledVector(
