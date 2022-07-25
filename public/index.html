@@ -6,10 +6,29 @@
     <style>
       body {
         margin: 0;
+        overflow: hidden;
+      }
+      canvas:nth-of-type(1) {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      canvas:nth-of-type(2) {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        top: -123px;
+        left: 212px;
+      }
+      canvas.active {
+        z-index: 1;
       }
       #controls {
-        width: fit-content;
-        margin: 0 auto;
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        z-index: 2;
       }
       #controls button {
         font-size: 80px;
@@ -22,10 +41,6 @@
     </style>
   </head>
   <body>
-    <div id="cubes-centering-container">
-      <div id="cube1-container"></div>
-      <div id="cube2-container"></div>
-    </div>
     <div id="controls">
       <button onmousedown="startTurn(1, 'R')">R</button>
       <button onmousedown="startTurn(1, 'Ri')">i</button>

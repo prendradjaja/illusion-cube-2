@@ -46,8 +46,8 @@ function main() {
 
   // cubes[1].setStickerColor('RUF', cubes[1].getStickerColor('FUR'));
 
-  document.getElementById('cube1-container')!.appendChild(cubes[1].getDomElement());
-  document.getElementById('cube2-container')!.appendChild(cubes[2].getDomElement());
+  document.body.appendChild(cubes[1].getDomElement());
+  document.body.appendChild(cubes[2].getDomElement());
 
   // DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
   //
@@ -125,6 +125,14 @@ function updateOtherCube(sourceCubeId: 1 | 2): void {
   }
 }
 
+function getOtherCube(cubeId: 1 | 2): RubiksCube {
+  if (cubeId === 1) {
+    return cubes[2]
+  } else {
+    return cubes[1];
+  }
+}
+
 class RubiksCube {
   private allCubies: Group[] = []; // TODO Rename to just cubies?
 
@@ -149,9 +157,9 @@ class RubiksCube {
     this.camera.lookAt(0, 0, 0)
 
     // Set up renderer
-    this.renderer = new WebGLRenderer({ antialias: true });
-    this.renderer.setClearColor('gray')
-    this.renderer.setSize(800, 800);
+    this.renderer = new WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setClearColor('magenta', 0)
+    this.renderer.setSize(1000, 1000);
 
     // Draw cube
     for (let x of [-1, 0, 1]) {
@@ -229,12 +237,19 @@ class RubiksCube {
     }
   }
 
+  public setActive(active: boolean): void {
+    this.renderer.domElement.classList.toggle('active', active);
+  }
+
   public startTurn(moveName: string): void {
     const move = getMoveDefinition(moveName)
 
     if (!move) {
       return
     }
+
+    this.setActive(true);
+    getOtherCube(this.cubeId).setActive(false);
 
     if (this.lastTween) {
       // If the most recent tween is still in progress, we want to skip to the
@@ -402,8 +417,8 @@ function vectorEquals(v: Vector3, w: Vector3, epsilon = 0.00001) {
 
 function calculateViewingFrustum(): [number, number, number, number, number, number] {
   const aspectRatio = 1;
-  const width = 7 * aspectRatio;
-  const height = 7;
+  const width = 10 * aspectRatio;
+  const height = 10;
   return [
     width / -2,
     width / 2,
