@@ -250,6 +250,18 @@ class RubiksCube {
 
     this.setActive(true);
     getOtherCube(this.cubeId).setActive(false);
+    if (this.cubeId === 2) {
+      update1To2.map(([left, _]) => {
+        cubes[1].setStickerColor(left, 'black')
+        cubes[1].render()
+      })
+    } else {
+      update1To2.map(([_, right]) => {
+        cubes[2].setStickerColor(right, 'black')
+        cubes[2].render()
+      })
+    }
+
 
     if (this.lastTween) {
       // If the most recent tween is still in progress, we want to skip to the
