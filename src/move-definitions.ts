@@ -82,8 +82,20 @@ export const moveDefinitions = {
   ...basicMoveDefinitions,
   Ri: inverse(basicMoveDefinitions.R),
   Ui: inverse(basicMoveDefinitions.U),
+  Fi: inverse(basicMoveDefinitions.F),
+  Li: inverse(basicMoveDefinitions.L),
+  Di: inverse(basicMoveDefinitions.D),
+  Bi: inverse(basicMoveDefinitions.B),
+  Mi: inverse(basicMoveDefinitions.M),
+  Ei: inverse(basicMoveDefinitions.E),
+  Si: inverse(basicMoveDefinitions.S),
   xi: inverse(basicMoveDefinitions.x),
-}
+  yi: inverse(basicMoveDefinitions.y),
+  zi: inverse(basicMoveDefinitions.z),
+
+  // TODO try this (it works, but will take some effort to make the types work, and I'm not sure if it's an improvement)
+  // ...Object.fromEntries(Object.entries(basicMoveDefinitions).map((([name, movedef]) => [name + 'i', inverse(movedef)]))),
+};
 
 export function getMoveDefinition(moveName: string): MoveDefinition | undefined {
   return (moveDefinitions as Partial<Record<string, MoveDefinition>>)[moveName];

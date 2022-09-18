@@ -87,8 +87,19 @@ function main() {
   document.addEventListener('keydown', e => onKeyDown(e, cubes[2]));
 
   // Button handler
-  (window as any).startTurn = (cubeId: 1 | 2, moveName: string) =>
-    cubes[cubeId].startTurn(moveName);
+  (window as any).handleClick = (cubeId: 1 | 2, moveName: string, e: MouseEvent) => {
+    if (e.button === 0) {
+      cubes[cubeId].startTurn(moveName)
+    } else if (e.button === 2) {
+      cubes[cubeId].startTurn(moveName + 'i')
+    }
+  };
+
+  document.querySelectorAll('button').forEach(button =>
+    button.addEventListener('contextmenu', () =>
+      event?.preventDefault()
+    )
+  );
 }
 
 const update2To1 = [
