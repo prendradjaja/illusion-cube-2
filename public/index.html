@@ -29,10 +29,20 @@
         width: 100%;
         text-align: center;
         z-index: 2;
+        display: flex;
+        justify-content: center;
+      }
+      #controls > * {
+        margin: 0 40px;
       }
       #controls button {
-        font-size: 80px;
+        font-size: 70px;
         font-family: monospace;
+        width: 1.2em;
+        height: 1.2em;
+      }
+      #controls button.spacer {
+        visibility: hidden;
       }
       #cubes-centering-container {
         display: flex;
@@ -42,34 +52,52 @@
   </head>
   <body>
     <div id="controls">
-      <!-- <button onmousedown="handleClick(1, 'R')">R</button> -->
-      <!-- <button onmousedown="handleClick(1, 'Ri')">i</button> -->
-      <!-- <button onmousedown="handleClick(1, 'U')">U</button> -->
-      <!-- <button onmousedown="handleClick(1, 'Ui')">i</button> -->
-
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-      <button onmousedown="handleClick(2, 'R', event)">R</button>
-      <button onmousedown="handleClick(2, 'U', event)">U</button>
-      <button onmousedown="handleClick(2, 'F', event)">F</button>
-
-      &nbsp;
-
-      <button onmousedown="handleClick(2, 'L', event)">L</button>
-      <button onmousedown="handleClick(2, 'D', event)">D</button>
-      <button onmousedown="handleClick(2, 'B', event)">B</button>
-
-      &nbsp;
-
-      <button onmousedown="handleClick(2, 'M', event)">M</button>
-      <button onmousedown="handleClick(2, 'E', event)">E</button>
-      <button onmousedown="handleClick(2, 'S', event)">S</button>
-
-      &nbsp;
-
-      <button onmousedown="handleClick(2, 'x', event)">x</button>
-      <button onmousedown="handleClick(2, 'y', event)">y</button>
-      <button onmousedown="handleClick(2, 'z', event)">z</button>
+      <div>
+        <button class="spacer">-</button
+        ><button onmousedown="handleClick(1, 'U', event)">U</button
+        ><button class="spacer">-</button>
+        <br>
+        <button  onmousedown="handleClick(1, 'L', event)">L</button
+        ><button onmousedown="handleClick(1, 'F', event)">F</button
+        ><button onmousedown="handleClick(1, 'R', event)">R</button>
+        <br>
+        <button class="spacer">-</button
+        ><button onmousedown="handleClick(1, 'D', event)">D</button
+        ><button onmousedown="handleClick(1, 'B', event)">B</button>
+        <br>
+        <br>
+        <br>
+        <button  onmousedown="handleClick(1, 'M', event)">M</button
+        ><button onmousedown="handleClick(1, 'E', event)">E</button
+        ><button onmousedown="handleClick(1, 'S', event)">S</button>
+        <br>
+        <button  onmousedown="handleClick(1, 'x', event)">x</button
+        ><button onmousedown="handleClick(1, 'y', event)">y</button
+        ><button onmousedown="handleClick(1, 'z', event)">z</button>
+      </div>
+      <div>
+        <button class="spacer">-</button
+        ><button onmousedown="handleClick(2, 'U', event)">U</button
+        ><button class="spacer">-</button>
+        <br>
+        <button  onmousedown="handleClick(2, 'L', event)">L</button
+        ><button onmousedown="handleClick(2, 'F', event)">F</button
+        ><button onmousedown="handleClick(2, 'R', event)">R</button>
+        <br>
+        <button class="spacer">-</button
+        ><button onmousedown="handleClick(2, 'D', event)">D</button
+        ><button onmousedown="handleClick(2, 'B', event)">B</button>
+        <br>
+        <br>
+        <br>
+        <button  onmousedown="handleClick(2, 'M', event)">M</button
+        ><button onmousedown="handleClick(2, 'E', event)">E</button
+        ><button onmousedown="handleClick(2, 'S', event)">S</button>
+        <br>
+        <button  onmousedown="handleClick(2, 'x', event)">x</button
+        ><button onmousedown="handleClick(2, 'y', event)">y</button
+        ><button onmousedown="handleClick(2, 'z', event)">z</button>
+      </div>
     </div>
   </body>
 </html>
