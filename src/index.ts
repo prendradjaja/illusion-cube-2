@@ -245,11 +245,20 @@ class RubiksCube {
     const move = getMoveDefinition(moveName)
 
     if (!move) {
+      console.warn('Move not found: ' + moveName);
       return
     }
 
     this.setActive(true);
     getOtherCube(this.cubeId).setActive(false);
+
+
+    if (this.lastTween) {
+      // If the most recent tween is still in progress, we want to skip to the
+      // end.
+      this.lastTween.stop();
+    }
+
     if (this.cubeId === 2) {
       update1To2.map(([left, _]) => {
         cubes[1].setStickerColor(left, 'black')
@@ -262,21 +271,16 @@ class RubiksCube {
       })
     }
 
-
-    if (this.lastTween) {
-      // If the most recent tween is still in progress, we want to skip to the
-      // end.
-      this.lastTween.stop();
-    }
-
     let lastProgress = 0;
 
     const onProgress = ({ progress }: { progress: number }) => {
-      const { axis, slice, direction } = move;
+      const { axis, slices, direction } = move;
       const progressDelta = progress - lastProgress;
       lastProgress = progress;
       const angle = direction * progressDelta * Math.PI / 2;
-      this.turn(axis, slice, angle)
+      for (let slice of slices) {
+        this.turn(axis, slice, angle)
+      }
       this.render();
     }
 
