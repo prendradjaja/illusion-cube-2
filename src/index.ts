@@ -14,6 +14,8 @@ import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 import {getMoveDefinition, MoveDefinition, moveDefinitions} from "./move-definitions";
 import {DEBUG_callPrivate, DEBUG_getPrivate} from "./debug-tools";
 
+const $ = (s: string) => document.querySelector(s);
+
 const cube1Colors = {
   'x=1': 'green',
   'x=-1': 'blue',
@@ -32,7 +34,7 @@ const cube2Colors = {
   'z=-1': 'blue',
 } as Partial<Record<string, string>>;
 
-const stickerSize = 0.85;
+const stickerSize = 0.90;
 const stickerThickness = 0.01;
 
 const cubes = {
@@ -46,8 +48,10 @@ function main() {
 
   // cubes[1].setStickerColor('RUF', cubes[1].getStickerColor('FUR'));
 
-  document.body.appendChild(cubes[1].getDomElement());
-  document.body.appendChild(cubes[2].getDomElement());
+  const cubesContainer = $('#cubes-container')!;
+
+  cubesContainer.appendChild(cubes[1].getDomElement());
+  cubesContainer.appendChild(cubes[2].getDomElement());
 
   // DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
   //
