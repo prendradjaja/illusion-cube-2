@@ -6,7 +6,7 @@ body {
 #cubes-container {
   position: relative;
   height: 900px;
-  width: 600px;
+  width: 630px;
   margin: 0 auto;
 }
 canvas:nth-of-type(1) {
