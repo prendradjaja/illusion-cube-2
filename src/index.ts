@@ -46,28 +46,10 @@ function main() {
   cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
   cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
 
-  // cubes[1].setStickerColor('RUF', cubes[1].getStickerColor('FUR'));
-
   const cubesContainer = $('#cubes-container')!;
 
   cubesContainer.appendChild(cubes[1].getDomElement());
   cubesContainer.appendChild(cubes[2].getDomElement());
-
-  // DEBUG_callPrivate(cubes[1], 'turn', 1, 1, Math.PI)
-  //
-  // cubes[1].setStickerColor('RD', 'hotpink')
-  // cubes[1].setStickerColor('RDF', 'purple')
-  //
-  // cubes[1].setStickerColor('RU', 'hotpink')
-  // cubes[1].setStickerColor('RUF', 'purple')
-  //
-  // cubes[1].setStickerColor('R', 'cyan')
-  //
-  // DEBUG_getPrivate<Group[]>(cubes[1], 'allCubies')[0].children.forEach(child => {
-  //   const position = new Vector3()
-  //   child.getWorldPosition(position)
-  //   console.log(position)
-  // })
 
   // Render first frame
   cubes[1].render();
@@ -166,7 +148,6 @@ class RubiksCube {
 
     // Set up camera
     this.camera = new OrthographicCamera(...calculateViewingFrustum());
-    /* this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10); */
     const y = cameraAngle === 'top' ? 4 : -4;
     this.camera.position.set(4, y, 4);
     this.camera.lookAt(0, 0, 0)
