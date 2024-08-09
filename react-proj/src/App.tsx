@@ -40,7 +40,7 @@ const stickerSize = 0.90;
 const stickerThickness = 0.01;
 
 const cubes = {
-  1: undefined as unknown as RubiksCube, // To be initialized in main
+  1: undefined as unknown as RubiksCube, // To be initialized on <App> mount
   2: undefined as unknown as RubiksCube,
 }
 
@@ -79,6 +79,12 @@ function App() {
         event?.preventDefault()
       )
     );
+
+    return () => {
+      cubes[1] = undefined as any;
+      cubes[2] = undefined as any;
+      cubesContainer.replaceChildren();
+    };
   }, []);
 
   function handleClick(cubeId: 1 | 2, moveName: string, e: MouseEvent): void {
