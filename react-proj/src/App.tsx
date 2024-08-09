@@ -1,17 +1,16 @@
 import {
   BoxGeometry,
-  Camera, Color, ColorRepresentation,
-  Group, Material,
+  Camera, ColorRepresentation,
+  Group,
   Mesh,
   MeshBasicMaterial,
   OrthographicCamera,
-  PerspectiveCamera,
   Scene,
   Vector3,
   WebGLRenderer
 } from "three";
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
-import {getMoveDefinition, MoveDefinition, moveDefinitions} from "./move-definitions";
+import {getMoveDefinition, moveDefinitions} from "./move-definitions";
 
 import './App.css';
 import { MouseEvent, useEffect, useState, useRef } from 'react';
@@ -457,24 +456,6 @@ function locationNameToStickerPosition(location: LocationName): Vector3 {
 
 function isAllUnique(arr: number[]): boolean {
   return arr.length === new Set(arr).size;
-}
-
-function onKeyDown(evt: KeyboardEvent, cube: RubiksCube): void {
-  let moveName: keyof typeof moveDefinitions;
-
-  if (evt.key === 'j' || evt.key === 'ArrowDown') {
-    moveName = 'Ri';
-  } else if (evt.key === 'k' || evt.key === 'ArrowUp') {
-    moveName = 'R';
-  } else if (evt.key === 'h' || evt.key === 'ArrowLeft') {
-    moveName = 'Ui';
-  } else if (evt.key === 'l' || evt.key === 'ArrowRight') {
-    moveName = 'U';
-  } else {
-    return;
-  }
-
-  cube.startTurn(moveName);
 }
 
 function floatEquals(a: number, b: number, epsilon = 0.00001) {
