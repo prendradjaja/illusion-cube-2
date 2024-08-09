@@ -349,7 +349,7 @@ class RubiksCube {
       .onComplete(() => {
         onProgress({ progress: 1 });
         updateOtherCube(this.cubeId);
-      }) // Do I need onComplete? Surely it's covered by onUpdate
+      })
       .onStop(() => {
         onProgress({ progress: 1 });
         updateOtherCube(this.cubeId);
