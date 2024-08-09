@@ -12,8 +12,10 @@ import {
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 import {getMoveDefinition, moveDefinitions} from "./move-definitions";
 
-import './App.css';
 import { MouseEvent, useEffect, useState, useRef } from 'react';
+
+import './App.css';
+import { RubiksCubeComponent } from './RubiksCube';
 
 const $ = (s: string) => document.querySelector(s);
 
@@ -45,45 +47,45 @@ const cubes = {
 
 function App() {
   useEffect(() => {
-    cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
-    cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
-
-    const cubesContainer = $('#cubes-container')!;
-
-    cubesContainer.appendChild(cubes[1].getDomElement());
-    cubesContainer.appendChild(cubes[2].getDomElement());
-
-    // Render first frame
-    cubes[1].render();
-    cubes[2].render();
-
-    // Animation loop
-    requestAnimationFrame(function animate(time) {
-      requestAnimationFrame(animate);
-      updateAllTweens(time);
-
-      // In principle, we could render on every frame like this. But that seems
-      // wasteful, so I'm avoiding that! Instead, by calling render() inside
-      // onProgress(), I only render while tweening (i.e. while making a turn).
-      // Probably not a big deal though -- normal fully-animated scenes need to
-      // render on every frame anyway.
-
-      // cube1.render();
-      // cube2.render();
-    });
-
-    document.querySelectorAll('button').forEach(button =>
-      button.addEventListener('contextmenu', () =>
-        // eslint-disable-next-line no-restricted-globals
-        event?.preventDefault()
-      )
-    );
-
-    return () => {
-      cubes[1] = undefined as any;
-      cubes[2] = undefined as any;
-      cubesContainer.replaceChildren();
-    };
+    // cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
+    // cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
+    //
+    // const cubesContainer = $('#cubes-container')!;
+    //
+    // cubesContainer.appendChild(cubes[1].getDomElement());
+    // cubesContainer.appendChild(cubes[2].getDomElement());
+    //
+    // // Render first frame
+    // cubes[1].render();
+    // cubes[2].render();
+    //
+    // // Animation loop
+    // requestAnimationFrame(function animate(time) {
+    //   requestAnimationFrame(animate);
+    //   updateAllTweens(time);
+    //
+    //   // In principle, we could render on every frame like this. But that seems
+    //   // wasteful, so I'm avoiding that! Instead, by calling render() inside
+    //   // onProgress(), I only render while tweening (i.e. while making a turn).
+    //   // Probably not a big deal though -- normal fully-animated scenes need to
+    //   // render on every frame anyway.
+    //
+    //   // cube1.render();
+    //   // cube2.render();
+    // });
+    //
+    // document.querySelectorAll('button').forEach(button =>
+    //   button.addEventListener('contextmenu', () =>
+    //     // eslint-disable-next-line no-restricted-globals
+    //     event?.preventDefault()
+    //   )
+    // );
+    //
+    // return () => {
+    //   cubes[1] = undefined as any;
+    //   cubes[2] = undefined as any;
+    //   cubesContainer.replaceChildren();
+    // };
   }, []);
 
   function handleClick(cubeId: 1 | 2, moveName: string, e: MouseEvent): void {
@@ -96,7 +98,12 @@ function App() {
 
   return (
     <>
-      <div id="cubes-container"></div>
+      <div id="cubes-container">
+        <RubiksCubeComponent
+          stickerColors={cube2Colors}
+          cameraAngle="top"
+        />
+      </div>
       <div id="controls">
         <div>
           <button className="spacer">-</button
