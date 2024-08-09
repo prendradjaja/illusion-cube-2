@@ -9,7 +9,7 @@ import {
   Vector3,
   WebGLRenderer
 } from "three";
-import { useEffect, useRef, useState, MutableRefObject } from 'react';
+import { useEffect, useRef, useState, MutableRefObject, forwardRef, useImperativeHandle } from 'react';
 import { floatEquals, calculateViewingFrustum, initialize } from './RubiksCube.helpers';
 
 export interface RubiksCubeProps {
@@ -25,7 +25,15 @@ export interface RubiksCubeState {
   allCubies: Group[];
 }
 
-export function RubiksCubeComponent(props: RubiksCubeProps) {
+export interface RubiksCubeHandle {
+  turnAndRender: (
+    axis: 0 | 1 | 2,
+    slice: -1 | 0 | 1,
+    angle: number
+  ) => void;
+}
+
+export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props: RubiksCubeProps, ref) {
   const { stickerColors, cameraAngle } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef: MutableRefObject<RubiksCubeState> = useRef(null as any);
@@ -39,11 +47,24 @@ export function RubiksCubeComponent(props: RubiksCubeProps) {
     getContainer().appendChild(renderer.domElement);
     render();
 
-    setTimeout(() => {
-      turn(0, -1, Math.PI / 2);
-      render();
-    }, 1000);
+    // setTimeout(() => {
+    //   turn(0, -1, Math.PI / 2);
+    //   render();
+    // }, 1000);
   }, []);
+
+  useImperativeHandle(ref, () => {
+    return {
+      turnAndRender(
+        axis: 0 | 1 | 2,
+        slice: -1 | 0 | 1,
+        angle: number
+      ): void {
+        turn(axis, slice, angle);
+        render();
+      },
+    } satisfies RubiksCubeHandle;
+  });
 
   function getContainer(): HTMLDivElement {
     return containerRef.current!; // !: Because ref={containerRef}, containerRef.current will not be null here
@@ -78,4 +99,4 @@ export function RubiksCubeComponent(props: RubiksCubeProps) {
   return <>
     <div ref={containerRef} />
   </>;
-}
+});

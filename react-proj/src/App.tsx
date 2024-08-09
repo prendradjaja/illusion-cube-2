@@ -15,7 +15,7 @@ import {getMoveDefinition, moveDefinitions} from "./move-definitions";
 import { MouseEvent, useEffect, useState, useRef } from 'react';
 
 import './App.css';
-import { RubiksCubeComponent } from './RubiksCube';
+import { RubiksCubeComponent, RubiksCubeHandle } from './RubiksCube';
 
 const $ = (s: string) => document.querySelector(s);
 
@@ -46,6 +46,7 @@ const cubes = {
 }
 
 function App() {
+  const cube2Ref = useRef<RubiksCubeHandle>(null);
   useEffect(() => {
     // cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
     // cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
@@ -89,11 +90,12 @@ function App() {
   }, []);
 
   function handleClick(cubeId: 1 | 2, moveName: string, e: MouseEvent): void {
-    if (e.button === 0) {
-      cubes[cubeId].startTurn(moveName)
-    } else if (e.button === 2) {
-      cubes[cubeId].startTurn(moveName + 'i')
-    }
+    cube2Ref.current!.turnAndRender(0, -1, Math.PI / 2);
+    // if (e.button === 0) {
+    //   cubes[cubeId].startTurn(moveName)
+    // } else if (e.button === 2) {
+    //   cubes[cubeId].startTurn(moveName + 'i')
+    // }
   }
 
   return (
@@ -102,6 +104,7 @@ function App() {
         <RubiksCubeComponent
           stickerColors={cube2Colors}
           cameraAngle="top"
+          ref={cube2Ref}
         />
       </div>
       <div id="controls">
