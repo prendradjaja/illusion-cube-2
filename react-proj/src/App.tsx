@@ -6,6 +6,7 @@ import { MouseEvent, useEffect, useState, useRef } from 'react';
 
 import './App.css';
 import { RubiksCubeComponent, RubiksCubeHandle } from './RubiksCube';
+import { update1To2, update2To1 } from './update-maps';
 
 const $ = (s: string) => document.querySelector(s);
 
@@ -66,11 +67,36 @@ function App() {
       lastTweenRef.current.stop();
     }
     const cubeRef = cubeRefs[cubeId];
-    const tween = cubeRef.current!.startTurn(fullMoveName);
+    const tween = getCube(cubeRef).startTurn(fullMoveName);
     setActiveCube(cubeId);
     if (tween) {
       lastTweenRef.current = tween;
     }
+  }
+
+  function updateOtherCube(sourceCubeId: 1 | 2): void {
+    if (sourceCubeId === 2) {
+      const destCubeId = 1;
+      const sourceCube = getCube(cubeRefs[sourceCubeId]);
+      const destCube = getCube(cubeRefs[destCubeId]);
+      for (let [sourceSticker, destSticker] of update2To1) {
+        destCube.setStickerColor(destSticker, sourceCube.getStickerColor(sourceSticker));
+      }
+      destCube.render();
+    } else {
+      const destCubeId = 2;
+      const sourceCube = getCube(cubeRefs[sourceCubeId]);
+      const destCube = getCube(cubeRefs[destCubeId]);
+      for (let [sourceSticker, destSticker] of update1To2) {
+        destCube.setStickerColor(destSticker, sourceCube.getStickerColor(sourceSticker));
+      }
+      destCube.render();
+    }
+  }
+
+  function getCube(cubeRef: typeof cube1Ref): RubiksCubeHandle {
+    // !: Because ref={cube1Ref} and ref={cube2Ref}, cubeRef.current will not be null here
+    return cubeRef.current!;
   }
 
   return (
@@ -81,12 +107,14 @@ function App() {
           cameraAngle="bottom"
           ref={cube1Ref}
           active={activeCube === 1}
+          onCompleteOrStop={() => updateOtherCube(1)}
         />
         <RubiksCubeComponent
           stickerColors={cube2Colors}
           cameraAngle="top"
           ref={cube2Ref}
           active={activeCube === 2}
+          onCompleteOrStop={() => updateOtherCube(2)}
         />
       </div>
       <div id="controls">

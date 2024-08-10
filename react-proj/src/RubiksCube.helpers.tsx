@@ -147,7 +147,7 @@ const faceNameToVector = {
   B: new Vector3(0, 0, -1),
 } as const;
 
-function locationNameToCubiePosition(location: LocationName): Vector3 {
+export function locationNameToCubiePosition(location: LocationName): Vector3 {
   const faces = Array.from(location) as FaceName[];
 
   if (
@@ -166,7 +166,7 @@ function locationNameToCubiePosition(location: LocationName): Vector3 {
   return result;
 }
 
-function locationNameToStickerPosition(location: LocationName): Vector3 {
+export function locationNameToStickerPosition(location: LocationName): Vector3 {
   const primaryFace = location[0] as FaceName;
   const result = locationNameToCubiePosition(location);
   result.addScaledVector(

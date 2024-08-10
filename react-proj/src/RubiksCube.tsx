@@ -10,7 +10,7 @@ import {
   WebGLRenderer
 } from "three";
 import { useEffect, useRef, useState, MutableRefObject, forwardRef, useImperativeHandle } from 'react';
-import { floatEquals, calculateViewingFrustum, initialize } from './RubiksCube.helpers';
+import { floatEquals, calculateViewingFrustum, initialize, locationNameToCubiePosition, locationNameToStickerPosition, vectorEquals } from './RubiksCube.helpers';
 import {getMoveDefinition, moveDefinitions} from "./move-definitions";
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 
@@ -18,6 +18,7 @@ export interface RubiksCubeProps {
   stickerColors: Partial<Record<string, string>>;
   cameraAngle: 'top' | 'bottom';
   active: boolean;
+  onCompleteOrStop: () => void;
 }
 
 // Not React state
@@ -30,6 +31,10 @@ export interface RubiksCubeState {
 
 export interface RubiksCubeHandle {
   startTurn: (moveName: string) => NumberTween | undefined;
+  getStickerColor: (stickerName: LocationName) => string;
+  setStickerColor: (stickerName: LocationName, color: ColorRepresentation) => void;
+  render: () => void;
+
   turnAndRender: (
     axis: 0 | 1 | 2,
     slice: -1 | 0 | 1,
@@ -39,8 +44,14 @@ export interface RubiksCubeHandle {
 
 export type NumberTween = Tween<{ progress: number }>;
 
+type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
+type LocationName =
+  | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
+  | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
+  | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
+
 export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props: RubiksCubeProps, ref) {
-  const { stickerColors, cameraAngle, active } = props;
+  const { stickerColors, cameraAngle, active, onCompleteOrStop } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef: MutableRefObject<RubiksCubeState> = useRef(null as any);
   if (stateRef.current === null) {
@@ -61,15 +72,17 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
 
   useImperativeHandle(ref, () => {
     return {
-      startTurn(moveName: string) {
-        return startTurn(moveName);
-      },
+      startTurn,
+      getStickerColor,
+      setStickerColor,
+      render,
 
       turnAndRender(
         axis: 0 | 1 | 2,
         slice: -1 | 0 | 1,
         angle: number
       ): void {
+        const DELETE_ME = 1;
         turn(axis, slice, angle);
         render();
       },
@@ -87,6 +100,8 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
 
   function startTurn(moveName: string): NumberTween | undefined {
     const move = getMoveDefinition(moveName)
+
+    console.log(getStickerColor('UFR'));
 
     if (!move) {
       console.warn('Move not found: ' + moveName);
@@ -124,11 +139,11 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
       .onUpdate(({ progress }) => onProgress({ progress }))
       .onComplete(() => {
         onProgress({ progress: 1 });
-        // updateOtherCube(this.cubeId);
-      }) // Do I need onComplete? Surely it's covered by onUpdate
+        onCompleteOrStop();
+      })
       .onStop(() => {
         onProgress({ progress: 1 });
-        // updateOtherCube(this.cubeId);
+        onCompleteOrStop();
       })
     tween.start();
     return tween;
@@ -153,6 +168,48 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
       cubie.position.applyAxisAngle(axisVector, angle);
       cubie.rotateOnWorldAxis(axisVector, angle);
     }
+  }
+
+  function getStickerColor(stickerName: LocationName): string {
+    return '#' + getStickerMaterial(stickerName).color.getHexString();
+  }
+
+  function setStickerColor(stickerName: LocationName, color: ColorRepresentation): void {
+    getStickerMaterial(stickerName).color.set(color);
+  }
+
+  function getStickerMaterial(stickerName: LocationName): MeshBasicMaterial {
+    const { allCubies } = stateRef.current;
+    const cubiePosition = locationNameToCubiePosition(stickerName);
+    const stickerPosition = locationNameToStickerPosition(stickerName);
+    const cubie = allCubies.find(
+      each => {
+        const position = new Vector3();
+        each.getWorldPosition(position);
+        return vectorEquals(position, cubiePosition)
+      }
+    );
+    if (!cubie) {
+      throw new Error("Cubie not found");
+    }
+    const sticker = cubie.children.find(
+      each => {
+        const position = new Vector3();
+        each.getWorldPosition(position);
+        return vectorEquals(position, stickerPosition);
+      }
+    )
+    if (!sticker) {
+      throw new Error("Sticker not found");
+    }
+    if (!(sticker instanceof Mesh)) {
+      throw new Error("Sticker is not a Mesh")
+    }
+    const material = sticker.material
+    if (!(material instanceof MeshBasicMaterial)) {
+      throw new Error("Sticker is not a MeshBasicMaterial")
+    }
+    return material;
   }
 
   return <>
