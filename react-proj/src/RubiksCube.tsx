@@ -1,17 +1,11 @@
-import {
-  ColorRepresentation,
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  OrthographicCamera,
-  Scene,
-  Vector3,
-  WebGLRenderer
-} from "three";
 import { useEffect, useRef, MutableRefObject, forwardRef, useImperativeHandle } from 'react';
+
+import { ColorRepresentation, Group, Mesh, MeshBasicMaterial, OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
+import { Tween, Easing } from "@tweenjs/tween.js";
+
 import { floatEquals, initialize, locationNameToCubiePosition, locationNameToStickerPosition, vectorEquals, LocationName } from './RubiksCube.helpers';
 import { getMoveDefinition } from "./move-definitions";
-import { Tween, Easing } from "@tweenjs/tween.js";
+
 
 export interface RubiksCubeProps {
   stickerColors: Partial<Record<string, string>>;
@@ -35,6 +29,7 @@ export interface RubiksCubeHandle {
 }
 
 export type NumberTween = Tween<{ progress: number }>;
+
 
 export const RubiksCube = forwardRef(function RubiksCube(props: RubiksCubeProps, ref) {
   const { active, onCompleteOrStop } = props;

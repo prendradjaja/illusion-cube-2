@@ -1,12 +1,14 @@
-import { update as updateAllTweens } from "@tweenjs/tween.js";
-import type { NumberTween } from "./RubiksCube";
-
 import { MouseEvent, useEffect, useState, useRef } from 'react';
 
-import './App.css';
+import { update as updateAllTweens } from "@tweenjs/tween.js";
+
+import type { NumberTween } from "./RubiksCube";
 import { RubiksCube, RubiksCubeHandle } from './RubiksCube';
 import { update1To2, update2To1 } from './update-maps';
 import { cube1Colors, cube2Colors } from './colors';
+
+import './App.css';
+
 
 function App() {
   const [activeCube, setActiveCube] = useState<1 | 2>(1);
@@ -156,6 +158,7 @@ function App() {
   );
 }
 
+
 function MoveButton(props: {
   cubeId: 1 | 2,
   moveName: string,
@@ -175,5 +178,6 @@ function MoveButton(props: {
     </button>
   );
 }
+
 
 export default App;

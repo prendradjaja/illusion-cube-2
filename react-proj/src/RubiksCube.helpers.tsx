@@ -1,17 +1,10 @@
-import {
-  BoxGeometry,
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  OrthographicCamera,
-  Scene,
-  Vector3,
-  WebGLRenderer
-} from "three";
+import { BoxGeometry, Group, Mesh, MeshBasicMaterial, OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
+
 import type { RubiksCubeProps, RubiksCubeExternalState } from './RubiksCube';
 
 
 type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
+
 export type LocationName =
   | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
   | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
@@ -19,6 +12,7 @@ export type LocationName =
 
 
 const stickerSize = 0.90;
+
 const stickerThickness = 0.01;
 
 
@@ -84,8 +78,6 @@ function createCubie(props: RubiksCubeProps, position: {x: number, y: number, z:
 
   return result;
 }
-
-
 
 export function floatEquals(a: number, b: number, epsilon = 0.00001) {
   return Math.abs(a - b) < epsilon;
@@ -165,4 +157,3 @@ export function locationNameToStickerPosition(location: LocationName): Vector3 {
 function isAllUnique(arr: number[]): boolean {
   return arr.length === new Set(arr).size;
 }
-
