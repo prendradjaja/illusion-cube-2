@@ -53,14 +53,8 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
 
   useEffect(() => {
     const { renderer } = stateRef.current;
-
     getContainer().appendChild(renderer.domElement);
     render();
-
-    // setTimeout(() => {
-    //   turn(0, -1, Math.PI / 2);
-    //   render();
-    // }, 1000);
   }, []);
 
   useImperativeHandle(ref, () => {
@@ -92,7 +86,6 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
     }
 
     let lastProgress = 0;
-
     const onProgress = ({ progress }: { progress: number }) => {
       const { axis, slices, direction } = move;
       const progressDelta = progress - lastProgress;
