@@ -1,5 +1,4 @@
 import { update as updateAllTweens } from "@tweenjs/tween.js";
-import {getMoveDefinition, moveDefinitions} from "./move-definitions";
 import type { NumberTween } from "./RubiksCube";
 
 import { MouseEvent, useEffect, useState, useRef } from 'react';
@@ -7,8 +6,6 @@ import { MouseEvent, useEffect, useState, useRef } from 'react';
 import './App.css';
 import { RubiksCubeComponent, RubiksCubeHandle } from './RubiksCube';
 import { update1To2, update2To1 } from './update-maps';
-
-const $ = (s: string) => document.querySelector(s);
 
 const cube1Colors = {
   'x=1': 'green',
@@ -27,9 +24,6 @@ const cube2Colors = {
   'z=1': 'green',
   'z=-1': 'blue',
 } as Partial<Record<string, string>>;
-
-const stickerSize = 0.90;
-const stickerThickness = 0.01;
 
 function App() {
   const cube1Ref = useRef<RubiksCubeHandle>(null);
@@ -73,12 +67,12 @@ function App() {
     // setActiveCube doesn't (necessarily?) happen synchronously.
     // Is it possible for the following render to happen ahead of setActiveCube's render? That would be bad! (a flash of black)
     if (cubeId === 2) {
-      update1To2.map(([left, _]) => {
+      update1To2.forEach(([left, _]) => {
         getCube(cubeRefs[1]).setStickerColor(left, 'black')
         getCube(cubeRefs[1]).render()
       })
     } else {
-      update1To2.map(([_, right]) => {
+      update1To2.forEach(([_, right]) => {
         getCube(cubeRefs[2]).setStickerColor(right, 'black')
         getCube(cubeRefs[2]).render()
       })
