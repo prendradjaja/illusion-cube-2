@@ -1,6 +1,5 @@
 import {
-  BoxGeometry,
-  Camera, ColorRepresentation,
+  ColorRepresentation,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -9,10 +8,10 @@ import {
   Vector3,
   WebGLRenderer
 } from "three";
-import { useEffect, useRef, useState, MutableRefObject, forwardRef, useImperativeHandle } from 'react';
-import { floatEquals, calculateViewingFrustum, initialize, locationNameToCubiePosition, locationNameToStickerPosition, vectorEquals } from './RubiksCube.helpers';
-import {getMoveDefinition, moveDefinitions} from "./move-definitions";
-import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
+import { useEffect, useRef, MutableRefObject, forwardRef, useImperativeHandle } from 'react';
+import { floatEquals, initialize, locationNameToCubiePosition, locationNameToStickerPosition, vectorEquals } from './RubiksCube.helpers';
+import { getMoveDefinition } from "./move-definitions";
+import { Tween, Easing } from "@tweenjs/tween.js";
 
 export interface RubiksCubeProps {
   stickerColors: Partial<Record<string, string>>;
@@ -45,7 +44,7 @@ type LocationName =
   | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
 
 export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props: RubiksCubeProps, ref) {
-  const { stickerColors, cameraAngle, active, onCompleteOrStop } = props;
+  const { active, onCompleteOrStop } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef: MutableRefObject<RubiksCubeState> = useRef(null as any);
   if (stateRef.current === null) {
@@ -53,7 +52,7 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
   }
 
   useEffect(() => {
-    const { renderer, scene, camera } = stateRef.current;
+    const { renderer } = stateRef.current;
 
     getContainer().appendChild(renderer.domElement);
     render();

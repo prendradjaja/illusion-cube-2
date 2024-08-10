@@ -1,6 +1,5 @@
 import {
   BoxGeometry,
-  Camera, ColorRepresentation,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -17,7 +16,7 @@ const stickerThickness = 0.01;
 
 
 export function initialize(props: RubiksCubeProps): RubiksCubeState {
-  const { stickerColors, cameraAngle } = props;
+  const { cameraAngle } = props;
   const scene = new Scene();
 
   // Set up camera
@@ -47,7 +46,7 @@ export function initialize(props: RubiksCubeProps): RubiksCubeState {
 }
 
 function createCubie(props: RubiksCubeProps, position: {x: number, y: number, z: number}): Group {
-  const { stickerColors, cameraAngle } = props;
+  const { stickerColors } = props;
   const result = new Group();
   result.position.set(position.x, position.y, position.z)
 
@@ -106,20 +105,6 @@ export function vectorEquals(v: Vector3, w: Vector3, epsilon = 0.00001) {
     floatEquals(v.z, w.z, epsilon)
   )
 }
-
-const update2To1 = [
-  ['FUL', 'RUF'],
-  ['FU', 'RU'],
-  ['FUR', 'RUB'],
-  ['FL', 'RF'],
-  ['F', 'R'],
-  ['FR', 'RB'],
-  ['FDL', 'RDF'],
-  ['FD', 'RD'],
-  ['FDR', 'RDB'],
-] as const;
-
-const update1To2 = update2To1.map(([a, b]) => [b, a]);
 
 type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
 type LocationName =
