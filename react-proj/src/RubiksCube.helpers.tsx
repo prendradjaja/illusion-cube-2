@@ -107,3 +107,76 @@ export function vectorEquals(v: Vector3, w: Vector3, epsilon = 0.00001) {
   )
 }
 
+const update2To1 = [
+  ['FUL', 'RUF'],
+  ['FU', 'RU'],
+  ['FUR', 'RUB'],
+  ['FL', 'RF'],
+  ['F', 'R'],
+  ['FR', 'RB'],
+  ['FDL', 'RDF'],
+  ['FD', 'RD'],
+  ['FDR', 'RDB'],
+] as const;
+
+const update1To2 = update2To1.map(([a, b]) => [b, a]);
+
+type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
+type LocationName =
+  | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
+  | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
+  | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
+
+function faceNameToAxis(face: FaceName): 0 | 1 | 2 {
+  if (face === 'R' || face === 'L') {
+    return 0;
+  } else if (face === 'U' || face === 'D') {
+    return 1
+  } else if (face === 'F' || face === 'B') {
+    return 2
+  }
+  throw new Error("Unreachable case");
+}
+
+const faceNameToVector = {
+  R: new Vector3(1, 0, 0),
+  L: new Vector3(-1, 0, 0),
+  U: new Vector3(0, 1, 0),
+  D: new Vector3(0, -1, 0),
+  F: new Vector3(0, 0, 1),
+  B: new Vector3(0, 0, -1),
+} as const;
+
+function locationNameToCubiePosition(location: LocationName): Vector3 {
+  const faces = Array.from(location) as FaceName[];
+
+  if (
+    !isAllUnique(
+      faces.map(face => faceNameToAxis(face))
+    )
+  ) {
+    // Could define StickerName as `type StickerName = 'RUF' | 'RFU' | 'LUF' | ...` and prevent this case at compile time
+    throw new Error('An axis was specified twice: ' + location)
+  }
+
+  const result = new Vector3();
+  for (let face of faces) {
+    result.add(faceNameToVector[face])
+  }
+  return result;
+}
+
+function locationNameToStickerPosition(location: LocationName): Vector3 {
+  const primaryFace = location[0] as FaceName;
+  const result = locationNameToCubiePosition(location);
+  result.addScaledVector(
+    faceNameToVector[primaryFace],
+    0.5
+  )
+  return result;
+}
+
+function isAllUnique(arr: number[]): boolean {
+  return arr.length === new Set(arr).size;
+}
+
