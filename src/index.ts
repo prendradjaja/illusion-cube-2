@@ -42,6 +42,8 @@ const cubes = {
   2: undefined as unknown as RubiksCube,
 }
 
+let lastTween: Tween<{ progress: number }> | undefined;
+
 function main() {
   cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
   cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
@@ -136,8 +138,6 @@ class RubiksCube {
   private camera: Camera;
   private scene: Scene;
   private renderer: WebGLRenderer;
-
-  private lastTween: Tween<{ progress: number }> | undefined;
 
   constructor(
     private stickerColors: Partial<Record<string, string>>,
@@ -249,10 +249,10 @@ class RubiksCube {
     getOtherCube(this.cubeId).setActive(false);
 
 
-    if (this.lastTween) {
+    if (lastTween) {
       // If the most recent tween is still in progress, we want to skip to the
       // end.
-      this.lastTween.stop();
+      lastTween.stop();
     }
 
     if (this.cubeId === 2) {
@@ -293,7 +293,7 @@ class RubiksCube {
         updateOtherCube(this.cubeId);
       })
     tween.start();
-    this.lastTween = tween;
+    lastTween = tween;
   };
 
   public getStickerColor(stickerName: LocationName): string {
