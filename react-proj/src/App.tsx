@@ -26,14 +26,16 @@ const cube2Colors = {
 } as Partial<Record<string, string>>;
 
 function App() {
+  const [activeCube, setActiveCube] = useState<1 | 2>(1);
+
   const cube1Ref = useRef<RubiksCubeHandle>(null);
   const cube2Ref = useRef<RubiksCubeHandle>(null);
-  const [activeCube, setActiveCube] = useState<1 | 2>(1);
   const cubeRefs = {
     1: cube1Ref,
     2: cube2Ref,
   } as const;
   const lastTweenRef = useRef<NumberTween | undefined>(undefined);
+
   useEffect(() => {
     // Animation loop
     requestAnimationFrame(function animate(time) {
@@ -122,56 +124,56 @@ function App() {
       <div id="controls">
         <div>
           <button className="spacer">-</button>
-          <Button cubeId={1} moveName="U" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="U" onClick={handleClick} />
           <button className="spacer">-</button>
           <br />
-          <Button cubeId={1} moveName="L" onClick={handleClick} />
-          <Button cubeId={1} moveName="F" onClick={handleClick} />
-          <Button cubeId={1} moveName="R" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="L" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="F" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="R" onClick={handleClick} />
           <br />
           <button className="spacer">-</button>
-          <Button cubeId={1} moveName="D" onClick={handleClick} />
-          <Button cubeId={1} moveName="B" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="D" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="B" onClick={handleClick} />
           <br />
           <br />
           <br />
-          <Button cubeId={1} moveName="M" onClick={handleClick} />
-          <Button cubeId={1} moveName="E" onClick={handleClick} />
-          <Button cubeId={1} moveName="S" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="M" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="E" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="S" onClick={handleClick} />
           <br />
-          <Button cubeId={1} moveName="x" onClick={handleClick} />
-          <Button cubeId={1} moveName="y" onClick={handleClick} />
-          <Button cubeId={1} moveName="z" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="x" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="y" onClick={handleClick} />
+          <MoveButton cubeId={1} moveName="z" onClick={handleClick} />
         </div>
         <div>
           <button className="spacer">-</button>
-          <Button cubeId={2} moveName="U" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="U" onClick={handleClick} />
           <button className="spacer">-</button>
           <br />
-          <Button cubeId={2} moveName="L" onClick={handleClick} />
-          <Button cubeId={2} moveName="F" onClick={handleClick} />
-          <Button cubeId={2} moveName="R" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="L" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="F" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="R" onClick={handleClick} />
           <br />
           <button className="spacer">-</button>
-          <Button cubeId={2} moveName="D" onClick={handleClick} />
-          <Button cubeId={2} moveName="B" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="D" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="B" onClick={handleClick} />
           <br />
           <br />
           <br />
-          <Button cubeId={2} moveName="M" onClick={handleClick} />
-          <Button cubeId={2} moveName="E" onClick={handleClick} />
-          <Button cubeId={2} moveName="S" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="M" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="E" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="S" onClick={handleClick} />
           <br />
-          <Button cubeId={2} moveName="x" onClick={handleClick} />
-          <Button cubeId={2} moveName="y" onClick={handleClick} />
-          <Button cubeId={2} moveName="z" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="x" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="y" onClick={handleClick} />
+          <MoveButton cubeId={2} moveName="z" onClick={handleClick} />
         </div>
       </div>
     </>
   );
 }
 
-function Button(props: {
+function MoveButton(props: {
   cubeId: 1 | 2,
   moveName: string,
   onClick: (
