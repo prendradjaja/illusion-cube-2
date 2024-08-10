@@ -11,6 +11,7 @@ import {
 } from "three";
 import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 import {getMoveDefinition, moveDefinitions} from "./move-definitions";
+import type { NumberTween } from "./RubiksCube";
 
 import { MouseEvent, useEffect, useState, useRef } from 'react';
 
@@ -42,6 +43,7 @@ const stickerThickness = 0.01;
 
 function App() {
   const cube2Ref = useRef<RubiksCubeHandle>(null);
+  const lastTweenRef = useRef<NumberTween | undefined>(undefined);
   useEffect(() => {
     // cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
     // cubes[2] = new RubiksCube(cube2Colors, 'top', 2);
@@ -54,22 +56,15 @@ function App() {
     // // Render first frame
     // cubes[1].render();
     // cubes[2].render();
-    //
-    // // Animation loop
-    // requestAnimationFrame(function animate(time) {
-    //   requestAnimationFrame(animate);
-    //   updateAllTweens(time);
-    //
-    //   // In principle, we could render on every frame like this. But that seems
-    //   // wasteful, so I'm avoiding that! Instead, by calling render() inside
-    //   // onProgress(), I only render while tweening (i.e. while making a turn).
-    //   // Probably not a big deal though -- normal fully-animated scenes need to
-    //   // render on every frame anyway.
-    //
-    //   // cube1.render();
-    //   // cube2.render();
-    // });
-    //
+
+    // Animation loop
+    requestAnimationFrame(function animate(time) {
+      requestAnimationFrame(animate);
+      updateAllTweens(time);
+
+      // TODO Stop animation loop on unmount
+    });
+
     // document.querySelectorAll('button').forEach(button =>
     //   button.addEventListener('contextmenu', () =>
     //     // eslint-disable-next-line no-restricted-globals
@@ -91,13 +86,12 @@ function App() {
     } else {
       fullMoveName = moveName;
     }
-    const move = getMoveDefinition(fullMoveName);
-    if (move) {
-      cube2Ref.current!.turnAndRender(
-        move.axis,
-        move.slices[0], // TODO This doesn't handle cube rotations properly
-        move.direction * Math.PI / 2
-      );
+    if (lastTweenRef.current) {
+      lastTweenRef.current.stop();
+    }
+    const tween = cube2Ref.current!.startTurn(fullMoveName);
+    if (tween) {
+      lastTweenRef.current = tween;
     }
   }
 
