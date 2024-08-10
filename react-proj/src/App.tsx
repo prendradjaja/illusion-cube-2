@@ -4,7 +4,7 @@ import type { NumberTween } from "./RubiksCube";
 import { MouseEvent, useEffect, useState, useRef } from 'react';
 
 import './App.css';
-import { RubiksCubeComponent, RubiksCubeHandle } from './RubiksCube';
+import { RubiksCube, RubiksCubeHandle } from './RubiksCube';
 import { update1To2, update2To1 } from './update-maps';
 
 const cube1Colors = {
@@ -111,14 +111,14 @@ function App() {
   return (
     <>
       <div id="cubes-container">
-        <RubiksCubeComponent
+        <RubiksCube
           stickerColors={cube1Colors}
           cameraAngle="bottom"
           ref={cube1Ref}
           active={activeCube === 1}
           onCompleteOrStop={() => updateOtherCube(1)}
         />
-        <RubiksCubeComponent
+        <RubiksCube
           stickerColors={cube2Colors}
           cameraAngle="top"
           ref={cube2Ref}

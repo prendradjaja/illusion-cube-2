@@ -43,7 +43,7 @@ type LocationName =
   | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
   | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
 
-export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props: RubiksCubeProps, ref) {
+export const RubiksCube = forwardRef(function RubiksCube(props: RubiksCubeProps, ref) {
   const { active, onCompleteOrStop } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef: MutableRefObject<RubiksCubeState> = useRef(null as any);
