@@ -64,7 +64,7 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
         render();
       },
     } satisfies RubiksCubeHandle;
-  });
+  }); // TODO Maybe add dependencies
 
   function getContainer(): HTMLDivElement {
     return containerRef.current!; // !: Because ref={containerRef}, containerRef.current will not be null here
