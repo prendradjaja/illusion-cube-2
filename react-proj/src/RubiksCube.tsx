@@ -34,12 +34,6 @@ export interface RubiksCubeHandle {
   getStickerColor: (stickerName: LocationName) => string;
   setStickerColor: (stickerName: LocationName, color: ColorRepresentation) => void;
   render: () => void;
-
-  turnAndRender: (
-    axis: 0 | 1 | 2,
-    slice: -1 | 0 | 1,
-    angle: number
-  ) => void;
 }
 
 export type NumberTween = Tween<{ progress: number }>;
@@ -76,16 +70,6 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
       getStickerColor,
       setStickerColor,
       render,
-
-      turnAndRender(
-        axis: 0 | 1 | 2,
-        slice: -1 | 0 | 1,
-        angle: number
-      ): void {
-        const DELETE_ME = 1;
-        turn(axis, slice, angle);
-        render();
-      },
     } satisfies RubiksCubeHandle;
   }); // TODO Maybe add dependencies
 
