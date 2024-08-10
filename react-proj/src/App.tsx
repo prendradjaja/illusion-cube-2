@@ -85,12 +85,20 @@ function App() {
   }, []);
 
   function handleClick(cubeId: 1 | 2, moveName: string, e: MouseEvent): void {
-    cube2Ref.current!.turnAndRender(0, -1, Math.PI / 2);
-    // if (e.button === 0) {
-    //   cubes[cubeId].startTurn(moveName)
-    // } else if (e.button === 2) {
-    //   cubes[cubeId].startTurn(moveName + 'i')
-    // }
+    let fullMoveName: string;
+    if (e.button === 2) {
+      fullMoveName = moveName + 'i';
+    } else {
+      fullMoveName = moveName;
+    }
+    const move = getMoveDefinition(fullMoveName);
+    if (move) {
+      cube2Ref.current!.turnAndRender(
+        move.axis,
+        move.slices[0], // TODO This doesn't handle cube rotations properly
+        move.direction * Math.PI / 2
+      );
+    }
   }
 
   return (
