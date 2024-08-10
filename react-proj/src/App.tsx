@@ -69,6 +69,21 @@ function App() {
     const cubeRef = cubeRefs[cubeId];
     const tween = getCube(cubeRef).startTurn(fullMoveName);
     setActiveCube(cubeId);
+
+    // setActiveCube doesn't (necessarily?) happen synchronously.
+    // Is it possible for the following render to happen ahead of setActiveCube's render? That would be bad! (a flash of black)
+    if (cubeId === 2) {
+      update1To2.map(([left, _]) => {
+        getCube(cubeRefs[1]).setStickerColor(left, 'black')
+        getCube(cubeRefs[1]).render()
+      })
+    } else {
+      update1To2.map(([_, right]) => {
+        getCube(cubeRefs[2]).setStickerColor(right, 'black')
+        getCube(cubeRefs[2]).render()
+      })
+    }
+
     if (tween) {
       lastTweenRef.current = tween;
     }
