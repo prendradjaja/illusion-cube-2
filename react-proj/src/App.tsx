@@ -41,13 +41,6 @@ function App() {
       updateAllTweens(time);
       // TODO Stop animation loop on unmount
     });
-
-    // document.querySelectorAll('button').forEach(button =>
-    //   button.addEventListener('contextmenu', () =>
-    //     // eslint-disable-next-line no-restricted-globals
-    //     event?.preventDefault()
-    //   )
-    // );
   }, []);
 
   function handleClick(cubeId: 1 | 2, moveName: string, e: MouseEvent): void {
@@ -129,52 +122,73 @@ function App() {
       <div id="controls">
         <div>
           <button className="spacer">-</button>
-          <button onMouseDown={(event) => handleClick(1, "U", event)}>U</button>
+          <Button cubeId={1} moveName="U" onClick={handleClick} />
           <button className="spacer">-</button>
           <br />
-          <button onMouseDown={(event) => handleClick(1, "L", event)}>L</button>
-          <button onMouseDown={(event) => handleClick(1, "F", event)}>F</button>
-          <button onMouseDown={(event) => handleClick(1, "R", event)}>R</button>
+          <Button cubeId={1} moveName="L" onClick={handleClick} />
+          <Button cubeId={1} moveName="F" onClick={handleClick} />
+          <Button cubeId={1} moveName="R" onClick={handleClick} />
           <br />
           <button className="spacer">-</button>
-          <button onMouseDown={(event) => handleClick(1, "D", event)}>D</button>
-          <button onMouseDown={(event) => handleClick(1, "B", event)}>B</button>
+          <Button cubeId={1} moveName="D" onClick={handleClick} />
+          <Button cubeId={1} moveName="B" onClick={handleClick} />
           <br />
           <br />
           <br />
-          <button onMouseDown={(event) => handleClick(1, "M", event)}>M</button>
-          <button onMouseDown={(event) => handleClick(1, "E", event)}>E</button>
-          <button onMouseDown={(event) => handleClick(1, "S", event)}>S</button>
+          <Button cubeId={1} moveName="M" onClick={handleClick} />
+          <Button cubeId={1} moveName="E" onClick={handleClick} />
+          <Button cubeId={1} moveName="S" onClick={handleClick} />
           <br />
-          <button onMouseDown={(event) => handleClick(1, "x", event)}>x</button>
-          <button onMouseDown={(event) => handleClick(1, "y", event)}>y</button>
-          <button onMouseDown={(event) => handleClick(1, "z", event)}>z</button>
+          <Button cubeId={1} moveName="x" onClick={handleClick} />
+          <Button cubeId={1} moveName="y" onClick={handleClick} />
+          <Button cubeId={1} moveName="z" onClick={handleClick} />
         </div>
         <div>
           <button className="spacer">-</button>
-          <button onMouseDown={(event) => handleClick(2, "U", event)}>U</button>
+          <Button cubeId={2} moveName="U" onClick={handleClick} />
           <button className="spacer">-</button>
           <br />
-          <button onMouseDown={(event) => handleClick(2, "L", event)}>L</button>
-          <button onMouseDown={(event) => handleClick(2, "F", event)}>F</button>
-          <button onMouseDown={(event) => handleClick(2, "R", event)}>R</button>
+          <Button cubeId={2} moveName="L" onClick={handleClick} />
+          <Button cubeId={2} moveName="F" onClick={handleClick} />
+          <Button cubeId={2} moveName="R" onClick={handleClick} />
           <br />
           <button className="spacer">-</button>
-          <button onMouseDown={(event) => handleClick(2, "D", event)}>D</button>
-          <button onMouseDown={(event) => handleClick(2, "B", event)}>B</button>
+          <Button cubeId={2} moveName="D" onClick={handleClick} />
+          <Button cubeId={2} moveName="B" onClick={handleClick} />
           <br />
           <br />
           <br />
-          <button onMouseDown={(event) => handleClick(2, "M", event)}>M</button>
-          <button onMouseDown={(event) => handleClick(2, "E", event)}>E</button>
-          <button onMouseDown={(event) => handleClick(2, "S", event)}>S</button>
+          <Button cubeId={2} moveName="M" onClick={handleClick} />
+          <Button cubeId={2} moveName="E" onClick={handleClick} />
+          <Button cubeId={2} moveName="S" onClick={handleClick} />
           <br />
-          <button onMouseDown={(event) => handleClick(2, "x", event)}>x</button>
-          <button onMouseDown={(event) => handleClick(2, "y", event)}>y</button>
-          <button onMouseDown={(event) => handleClick(2, "z", event)}>z</button>
+          <Button cubeId={2} moveName="x" onClick={handleClick} />
+          <Button cubeId={2} moveName="y" onClick={handleClick} />
+          <Button cubeId={2} moveName="z" onClick={handleClick} />
         </div>
       </div>
     </>
   );
 }
+
+function Button(props: {
+  cubeId: 1 | 2,
+  moveName: string,
+  onClick: (
+    cubeId: 1 | 2,
+    moveName: string,
+    event: MouseEvent
+  ) => void,
+}) {
+  const { cubeId, moveName, onClick } = props;
+  return (
+    <button
+      onMouseDown={(event) => onClick(cubeId, moveName, event)}
+      onContextMenu={(event) => event.preventDefault()}
+    >
+      { moveName }
+    </button>
+  );
+}
+
 export default App;
