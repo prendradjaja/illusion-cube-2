@@ -92,18 +92,6 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
       return undefined;
     }
 
-    // if (this.cubeId === 2) {
-    //   update1To2.map(([left, _]) => {
-    //     cubes[1].setStickerColor(left, 'black')
-    //     cubes[1].render()
-    //   })
-    // } else {
-    //   update1To2.map(([_, right]) => {
-    //     cubes[2].setStickerColor(right, 'black')
-    //     cubes[2].render()
-    //   })
-    // }
-
     let lastProgress = 0;
 
     const onProgress = ({ progress }: { progress: number }) => {
