@@ -1,109 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Illusion Cube</title>
-    <link rel="stylesheet" href="./styles.css">
-    <style>
-      body {
-        margin: 0;
-        background: #c5e2e2;
-        overflow-x: hidden;
-      }
-      #cubes-container {
-        position: relative;
-        height: 900px;
-        width: 630px;
-        margin: 0 auto;
-      }
-      canvas:nth-of-type(1) {
-        position: absolute;
-        top: 0px;
-        left: -290px;
-      }
-      canvas:nth-of-type(2) {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        top: -123px;
-        left: -78px;
-      }
-      canvas.active {
-        z-index: 1;
-      }
-      #controls {
-        margin-bottom: 100px;
-        position: relative;
-        min-width: max-content;
-        text-align: center;
-        z-index: 2;
-        display: flex;
-        justify-content: center;
-      }
-      #controls > * {
-        margin: 0 40px;
-      }
-      #controls button {
-        margin: 2px;
-        font-size: 60px;
-        font-family: monospace;
-        width: 1.2em;
-        height: 1.2em;
-      }
-      #controls button.spacer {
-        visibility: hidden;
-      }
-    </style>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
   </head>
   <body>
-    <div id="cubes-container"></div>
-    <div id="controls">
-      <div>
-        <button class="spacer">-</button
-        ><button onmousedown="handleClick(1, 'U', event)">U</button
-        ><button class="spacer">-</button>
-        <br>
-        <button  onmousedown="handleClick(1, 'L', event)">L</button
-        ><button onmousedown="handleClick(1, 'F', event)">F</button
-        ><button onmousedown="handleClick(1, 'R', event)">R</button>
-        <br>
-        <button class="spacer">-</button
-        ><button onmousedown="handleClick(1, 'D', event)">D</button
-        ><button onmousedown="handleClick(1, 'B', event)">B</button>
-        <br>
-        <br>
-        <br>
-        <button  onmousedown="handleClick(1, 'M', event)">M</button
-        ><button onmousedown="handleClick(1, 'E', event)">E</button
-        ><button onmousedown="handleClick(1, 'S', event)">S</button>
-        <br>
-        <button  onmousedown="handleClick(1, 'x', event)">x</button
-        ><button onmousedown="handleClick(1, 'y', event)">y</button
-        ><button onmousedown="handleClick(1, 'z', event)">z</button>
-      </div>
-      <div>
-        <button class="spacer">-</button
-        ><button onmousedown="handleClick(2, 'U', event)">U</button
-        ><button class="spacer">-</button>
-        <br>
-        <button  onmousedown="handleClick(2, 'L', event)">L</button
-        ><button onmousedown="handleClick(2, 'F', event)">F</button
-        ><button onmousedown="handleClick(2, 'R', event)">R</button>
-        <br>
-        <button class="spacer">-</button
-        ><button onmousedown="handleClick(2, 'D', event)">D</button
-        ><button onmousedown="handleClick(2, 'B', event)">B</button>
-        <br>
-        <br>
-        <br>
-        <button  onmousedown="handleClick(2, 'M', event)">M</button
-        ><button onmousedown="handleClick(2, 'E', event)">E</button
-        ><button onmousedown="handleClick(2, 'S', event)">S</button>
-        <br>
-        <button  onmousedown="handleClick(2, 'x', event)">x</button
-        ><button onmousedown="handleClick(2, 'y', event)">y</button
-        ><button onmousedown="handleClick(2, 'z', event)">z</button>
-      </div>
-    </div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
   </body>
 </html>

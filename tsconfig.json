@@ -1,25 +1,26 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "strict": true,
-    "noImplicitReturns": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "declaration": true,
     "target": "es2015",
-    "lib": ["es2017", "dom"],
-    "outDir": "dist",
-    "rootDir": "./",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["types/*"]
-    }
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
   "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules/*"
+    "src"
   ]
 }

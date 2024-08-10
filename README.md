@@ -2,14 +2,16 @@
 
 https://illusion-cube.netlify.app/
 
+Bootstrapped with `create-react-app`. ([CRA readme](./create-react-app.readme.md))
+
 ## Development setup instructions
 
 ```bash
 npm install
-npm run serve
+npm start
 ```
 
-Then visit <http://localhost:8080/>.
+Then visit <http://localhost:3000/>.
 
 ## Example "impossible" state
 
