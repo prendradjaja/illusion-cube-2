@@ -3,29 +3,27 @@ body {
   background: #c5e2e2;
   overflow-x: hidden;
 }
-
 #cubes-container {
   position: relative;
   height: 900px;
   width: 630px;
   margin: 0 auto;
 }
-/* canvas:nth-of-type(1) { */
-/*   position: absolute; */
-/*   top: 0px; */
-/*   left: -290px; */
-/* } */
-/* canvas:nth-of-type(2) { */
-/*   position: absolute; */
-/*   top: 0px; */
-/*   left: 0px; */
-/*   top: -123px; */
-/*   left: -78px; */
-/* } */
-/* canvas.active { */
-/*   z-index: 1; */
-/* } */
-
+#cubes-container > div:nth-of-type(1) {
+  position: absolute;
+  top: 0px;
+  left: -290px;
+}
+#cubes-container > div:nth-of-type(2) {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  top: -123px;
+  left: -78px;
+}
+.active {
+  z-index: 1;
+}
 #controls {
   margin-bottom: 100px;
   position: relative;

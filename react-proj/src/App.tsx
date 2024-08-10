@@ -42,7 +42,13 @@ const stickerSize = 0.90;
 const stickerThickness = 0.01;
 
 function App() {
+  const cube1Ref = useRef<RubiksCubeHandle>(null);
   const cube2Ref = useRef<RubiksCubeHandle>(null);
+  const [activeCube, setActiveCube] = useState<1 | 2>(1);
+  const cubeRefs = {
+    1: cube1Ref,
+    2: cube2Ref,
+  } as const;
   const lastTweenRef = useRef<NumberTween | undefined>(undefined);
   useEffect(() => {
     // cubes[1] = new RubiksCube(cube1Colors, 'bottom', 1);
@@ -89,7 +95,9 @@ function App() {
     if (lastTweenRef.current) {
       lastTweenRef.current.stop();
     }
-    const tween = cube2Ref.current!.startTurn(fullMoveName);
+    const cubeRef = cubeRefs[cubeId];
+    const tween = cubeRef.current!.startTurn(fullMoveName);
+    setActiveCube(cubeId);
     if (tween) {
       lastTweenRef.current = tween;
     }
@@ -99,9 +107,16 @@ function App() {
     <>
       <div id="cubes-container">
         <RubiksCubeComponent
+          stickerColors={cube1Colors}
+          cameraAngle="bottom"
+          ref={cube1Ref}
+          active={activeCube === 1}
+        />
+        <RubiksCubeComponent
           stickerColors={cube2Colors}
           cameraAngle="top"
           ref={cube2Ref}
+          active={activeCube === 2}
         />
       </div>
       <div id="controls">

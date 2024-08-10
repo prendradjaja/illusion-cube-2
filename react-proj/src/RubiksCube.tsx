@@ -17,6 +17,7 @@ import { Tween, Easing, update as updateAllTweens } from "@tweenjs/tween.js";
 export interface RubiksCubeProps {
   stickerColors: Partial<Record<string, string>>;
   cameraAngle: 'top' | 'bottom';
+  active: boolean;
 }
 
 // Not React state
@@ -39,7 +40,7 @@ export interface RubiksCubeHandle {
 export type NumberTween = Tween<{ progress: number }>;
 
 export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props: RubiksCubeProps, ref) {
-  const { stickerColors, cameraAngle } = props;
+  const { stickerColors, cameraAngle, active } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef: MutableRefObject<RubiksCubeState> = useRef(null as any);
   if (stateRef.current === null) {
@@ -91,9 +92,6 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
       console.warn('Move not found: ' + moveName);
       return undefined;
     }
-
-    // this.setActive(true);
-    // getOtherCube(this.cubeId).setActive(false);
 
     // if (this.cubeId === 2) {
     //   update1To2.map(([left, _]) => {
@@ -158,6 +156,9 @@ export const RubiksCubeComponent = forwardRef(function RubiksCubeComponent(props
   }
 
   return <>
-    <div ref={containerRef} />
+    <div
+      ref={containerRef}
+      className={active ? 'active' : ''}
+    />
   </>;
 });
