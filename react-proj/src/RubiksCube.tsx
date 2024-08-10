@@ -9,7 +9,7 @@ import {
   WebGLRenderer
 } from "three";
 import { useEffect, useRef, MutableRefObject, forwardRef, useImperativeHandle } from 'react';
-import { floatEquals, initialize, locationNameToCubiePosition, locationNameToStickerPosition, vectorEquals } from './RubiksCube.helpers';
+import { floatEquals, initialize, locationNameToCubiePosition, locationNameToStickerPosition, vectorEquals, LocationName } from './RubiksCube.helpers';
 import { getMoveDefinition } from "./move-definitions";
 import { Tween, Easing } from "@tweenjs/tween.js";
 
@@ -20,8 +20,7 @@ export interface RubiksCubeProps {
   onCompleteOrStop: () => void;
 }
 
-// Not React state
-export interface RubiksCubeState {
+export interface RubiksCubeExternalState {
   renderer: WebGLRenderer;
   camera: OrthographicCamera;
   scene: Scene;
@@ -37,16 +36,10 @@ export interface RubiksCubeHandle {
 
 export type NumberTween = Tween<{ progress: number }>;
 
-type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
-type LocationName =
-  | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
-  | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
-  | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
-
 export const RubiksCube = forwardRef(function RubiksCube(props: RubiksCubeProps, ref) {
   const { active, onCompleteOrStop } = props;
   const containerRef = useRef<HTMLDivElement>(null);
-  const stateRef: MutableRefObject<RubiksCubeState> = useRef(null as any);
+  const stateRef: MutableRefObject<RubiksCubeExternalState> = useRef(null as any);
   if (stateRef.current === null) {
     stateRef.current = initialize(props);
   }

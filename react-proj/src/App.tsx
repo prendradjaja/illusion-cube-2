@@ -6,24 +6,7 @@ import { MouseEvent, useEffect, useState, useRef } from 'react';
 import './App.css';
 import { RubiksCube, RubiksCubeHandle } from './RubiksCube';
 import { update1To2, update2To1 } from './update-maps';
-
-const cube1Colors = {
-  'x=1': 'green',
-  'x=-1': 'blue',
-  'y=1': 'white',
-  'y=-1': 'yellow',
-  'z=1': 'orange',
-  'z=-1': 'red',
-} as Partial<Record<string, string>>;
-
-const cube2Colors = {
-  'x=1': 'red',
-  'x=-1': 'orange',
-  'y=1': 'white',
-  'y=-1': 'yellow',
-  'z=1': 'green',
-  'z=-1': 'blue',
-} as Partial<Record<string, string>>;
+import { cube1Colors, cube2Colors } from './colors';
 
 function App() {
   const [activeCube, setActiveCube] = useState<1 | 2>(1);

@@ -8,14 +8,21 @@ import {
   Vector3,
   WebGLRenderer
 } from "three";
-import type { RubiksCubeProps, RubiksCubeState } from './RubiksCube';
+import type { RubiksCubeProps, RubiksCubeExternalState } from './RubiksCube';
+
+
+type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
+export type LocationName =
+  | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
+  | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
+  | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
 
 
 const stickerSize = 0.90;
 const stickerThickness = 0.01;
 
 
-export function initialize(props: RubiksCubeProps): RubiksCubeState {
+export function initialize(props: RubiksCubeProps): RubiksCubeExternalState {
   const { cameraAngle } = props;
   const scene = new Scene();
 
@@ -105,12 +112,6 @@ export function vectorEquals(v: Vector3, w: Vector3, epsilon = 0.00001) {
     floatEquals(v.z, w.z, epsilon)
   )
 }
-
-type FaceName = 'U' | 'F' | 'R' | 'D' | 'B' | 'L';
-type LocationName =
-  | `${FaceName}${FaceName}${FaceName}` // e.g. "RUF" (a sticker on a corner piece)
-  | `${FaceName}${FaceName}` // e.g. "RU" (a sticker on an edge piece)
-  | `${FaceName}`; // e.g. "R" (a sticker on a center piece)
 
 function faceNameToAxis(face: FaceName): 0 | 1 | 2 {
   if (face === 'R' || face === 'L') {
